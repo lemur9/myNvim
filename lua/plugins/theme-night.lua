@@ -4,8 +4,12 @@ return {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    config = function ()
-        vim.cmd.colorscheme("tokyonight-night")
+    opts = {
+      style = "moon"
+    },
+    config = function (_, opts)
+      require("tokyonight").setup(opts)
+      vim.cmd.colorscheme("tokyonight")
     end
   }
 }

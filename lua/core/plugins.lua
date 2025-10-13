@@ -8,14 +8,14 @@
 -- stdpath("data") Linux: ~/.local/share/nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
-        lazypath,
-    })
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
 
 -- 2. 将 lazypath 设置为运行时路径
@@ -27,19 +27,18 @@ vim.opt.rtp:prepend(lazypath)
 -- 3. 加载lazy.nvim模块
 -- require("lazy").setup("plugins")
 require("lazy").setup({
-    require("plugins.lualine"),             -- 文件状态展示
-    require("plugins.nvim-tree"),           -- 文件树
-    require("plugins.theme-night"),         -- 主题
-    require("plugins.treesitter"),          -- 代码高亮
-    require("plugins.telescope"),           -- 文件搜索
+  require("plugins.lualine"),             -- 文件状态展示
+  require("plugins.nvim-tree"),           -- 文件树
+  require("plugins.theme-night"),         -- 主题
+  require("plugins.treesitter"),          -- 代码高亮
+  require("plugins.telescope"),           -- 文件搜索
 
-    require("plugins.cmp"),                 -- 代码片段补全
-    require("plugins.lsp"),                 -- 语法支持
-    require("plugins.trans"),               -- 翻译
-    require("plugins.indent-line"),         -- 方法标识线
-    require("plugins.bufferline"),          -- tab页缓冲区
-    require("plugins.vimcdoc"),             -- vim中文帮助文档
-    require("plugins.clipboard"),
-    require("plugins.markdown"),            -- markdown预览
-    require("plugins.which-key"),           -- 按键映射
+  require("plugins.cmp"),                 -- 代码片段补全
+  require("plugins.lsp"),                 -- 语法支持
+  require("plugins.trans"),               -- 翻译
+  require("plugins.indent-line"),         -- 方法标识线
+  require("plugins.bufferline"),          -- tab页缓冲区
+  require("plugins.vimcdoc"),             -- vim中文帮助文档
+  require("plugins.markdown"),            -- markdown预览
+  require("plugins.which-key"),           -- 按键映射
 })
