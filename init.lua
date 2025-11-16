@@ -1,4 +1,11 @@
-require("core.options") -- 基础配置
-require("core.keymaps") -- 按键配置
-require("core.plugins") -- lazy包管理插件
-require('core.autocmd') -- 自动命令配置
+_G.LemurVim = require("util")
+
+require("core")
+require("plugins")
+
+require("lazy").setup(vim.tbl_values(LemurVim.plugins), LemurVim.lazy)
+
+-- 调试
+function LemurVim.dump()
+	print(vim.inspect(LemurVim))
+end

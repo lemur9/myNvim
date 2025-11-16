@@ -1,4 +1,4 @@
-return {
+LemurVim.plugins.lsp = {
   -- lsp installation
   {
     'williamboman/mason-lspconfig.nvim',
@@ -43,12 +43,11 @@ return {
     'neovim/nvim-lspconfig',
     event = 'VeryLazy',
     dependencies = {
-      { 'folke/neodev.nvim', opts = {} },
+      { 'folke/neodev.nvim', opts = {}, lazy = false, priority = 1000 },
       { 'j-hui/fidget.nvim', opts = {} },
     },
     config = function()
-      local lspconfig = require('lspconfig')
-      local icons = require('plugins.config.icons').diagnostic_icons
+      local icons = LemurVim.config.icons.diagnostic_icons
 
       -- 诊断信息设置、快捷键、服务器配置等
       -- 配置提示文本
@@ -115,7 +114,7 @@ return {
       }
 
       -- autocompletion
-      --            local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      -- local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
       -- on attch
       local on_attach = function(client, bufnr)
@@ -158,25 +157,36 @@ return {
         'docker_compose_language_service',
       }
       for _, lsp in ipairs(servers) do
-        lspconfig[lsp].setup({
+        vim.lsp.config[lsp] = {
           on_attach = on_attach,
-          capabilities = capabilities,
-        })
+          -- capabilities = capabilities,
+        }
       end
 
       -- lua
-      lspconfig.lua_ls.setup({
+      vim.lsp.config["lua_ls"] = {
         on_attach = on_attach,
         handlers = handlers,
         capabilities = capabilities,
         settings = {
           Lua = {
+            runtime = {
+              -- 告诉语言服务器你在用的是 LuaJIT（Neovim 内置 Lua 版本）
+              version = 'LuaJIT',
+            },
             diagnostics = {
+              -- 让 LSP 识别 Neovim 的全局变量
               globals = { 'vim' },
             },
+            workspace = {
+              -- 让 LSP 知道 Neovim 的运行时文件（这样才能识别 vim.xxx API）
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false, -- 避免每次弹窗提示“是否配置第三方库”
+            },
+            telemetry = { enable = false },
           },
         },
-      })
+      }
 
       -- vue
       local vue_language_server_path =
@@ -184,7 +194,7 @@ return {
       local typescript_language_server_path =
       vim.fn.expand('$MASON/packages/typescript-language-server/node_modules/typescript/lib')
 
-      lspconfig.ts_ls.setup({
+      vim.lsp.config["ts_ls"] = {
         on_attach = on_attach,
         capabilities = capabilities,
         filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
@@ -197,8 +207,8 @@ return {
             },
           },
         },
-      })
-      lspconfig.volar.setup({
+      }
+      vim.lsp.config["volar"] = {
         on_attach = on_attach,
         capabilities = capabilities,
         init_options = {
@@ -206,10 +216,10 @@ return {
             tsdk = typescript_language_server_path,
           },
         },
-      })
+      }
 
       -- 配置 jdtls
-      lspconfig.jdtls.setup({
+      vim.lsp.config["jdtls"] = {
         cmd = {
           "java",
           "-Declipse.application=org.eclipse.jdt.ls.core.id1",
@@ -227,15 +237,13 @@ return {
           "-javaagent:/home/lemur/.local/share/nvim/mason/packages/jdtls/lombok.jar",
           "-Xbootclasspath/a:/home/lemur/.local/share/nvim/mason/packages/jdtls/lombok.jar",
           "-jar",
-          "/home/lemur/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.6.900.v20240613-2009.jar",
+          "/home/lemur/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.7.100.v20251014-1222.jar",
           "-configuration",
           "/home/lemur/.local/share/nvim/mason/packages/jdtls/config_linux",
           "-data",
           "/home/lemur/.local/share/nvim/mason/packages/jdtls/workspace/folder"
         },
-        root_dir = lspconfig.util.root_pattern(
-          ".git", "pom.xml", "build.gradle"
-        ),
+        root_dir = vim.fs.dirname(vim.fs.find({".git", "pom.xml", "build.gradle"}, { upward = true })[1]),
         init_options = {
           bundles = {
           }
@@ -250,7 +258,7 @@ return {
             }
           }
         }
-      })
+      }
     end,
   },
 

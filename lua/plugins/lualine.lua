@@ -1,11 +1,11 @@
 -- 文件状态展示插件
-return {
+LemurVim.plugins.lualine = {
     {
         'nvim-lualine/lualine.nvim',
         event = 'VeryLazy',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         opts = function()
-            local icons = require('plugins.config.icons').diagnostic_icons
+            local icons = LemurVim.config.icons.diagnostic_icons
             return {
                 options = {
                     theme = 'tokyonight-night',

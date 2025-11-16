@@ -1,4 +1,4 @@
-return {
+LemurVim.plugins.trans =  {
     {
         "JuanZoran/Trans.nvim",
         build = function () require'Trans'.install() end,

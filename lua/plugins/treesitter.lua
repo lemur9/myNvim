@@ -1,4 +1,4 @@
-return {
+LemurVim.plugins["nvim-treesitter"] = {
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",

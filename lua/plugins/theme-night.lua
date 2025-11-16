@@ -1,5 +1,4 @@
--- 文件树插件
-return {
+LemurVim.plugins.tokyonight = {
   {
     "folke/tokyonight.nvim",
     lazy = false,

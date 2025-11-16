@@ -1,6 +1,4 @@
-local G = require('core.G');
-
-return {
+LemurVim.plugins.markdown = {
     {
         'iamcco/markdown-preview.nvim',
         ft = { 'markdown' },
@@ -9,13 +7,13 @@ return {
             { "<leader>mk", "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle Markdown Preview" },
         },
         config = function ()
-            G.g.mkdp_auto_start = 1
-            G.g.mkdp_auto_close = 1
-            G.g.mkdp_echo_preview_url = 1
-            G.g.mkdp_markdown_css = os.getenv('HOME') .. '/.config/nvim/lua/plugins/config/css/markdown.css'
-            G.g.mkdp_highlight_css = os.getenv('HOME') .. '/.config/nvim/lua/plugins/config/css/highlight.css'
-            G.g.mkdp_browser = 'microsoft-edge-beta'
-            G.g.mkdp_theme = 'light'
+            LemurVim.G.g.mkdp_auto_start = 1
+            LemurVim.G.g.mkdp_auto_close = 1
+            LemurVim.G.g.mkdp_echo_preview_url = 1
+            LemurVim.G.g.mkdp_markdown_css = os.getenv('HOME') .. '/.config/nvim/lua/plugins/config/css/markdown.css'
+            LemurVim.G.g.mkdp_highlight_css = os.getenv('HOME') .. '/.config/nvim/lua/plugins/config/css/highlight.css'
+            LemurVim.G.g.mkdp_browser = 'microsoft-edge-beta'
+            LemurVim.G.g.mkdp_theme = 'light'
         end
     },
     {

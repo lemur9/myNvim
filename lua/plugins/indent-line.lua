@@ -1,4 +1,4 @@
-return {
+LemurVim.plugins["indent-blankline"] = {
     -- indent line
   {
     'lukas-reineke/indent-blankline.nvim',
