@@ -47,7 +47,7 @@ LemurVim.plugins.lsp = {
       { 'j-hui/fidget.nvim', opts = {} },
     },
     config = function()
-      local icons = LemurVim.config.icons.diagnostic_icons
+      local icons = LemurVim.config.icons.diagnostics
 
       -- 诊断信息设置、快捷键、服务器配置等
       -- 配置提示文本
@@ -58,15 +58,6 @@ LemurVim.plugins.lsp = {
         update_in_insert = true,
         float = { border = 'rounded' },
       })
-
-      -- set signs
-      -- 对错误警告的图标
-      local icons = {
-        Error = icons.error,
-        Warn = icons.warn,
-        Hint = icons.hint,
-        Info = icons.info
-      }
 
       -- 使用新 API 配置诊断符号
       vim.diagnostic.config({

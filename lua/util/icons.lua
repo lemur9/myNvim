@@ -1,10 +1,4 @@
 local M = {
-  diagnostic_icons = {
-    error = ' ',
-    warn = ' ',
-    hint = ' ',
-    info = ' ',
-  },
   alpha_icons = {
     new_file = ' ',
     search = ' ',

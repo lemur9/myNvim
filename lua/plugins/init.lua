@@ -19,3 +19,6 @@ require("plugins.trans") -- 翻译
 require("plugins.vimcdoc") -- vim中文帮助文档
 require("plugins.markdown") -- markdown预览
 require("plugins.which-key") -- 按键映射
+require("plugins.snacks") -- lazy.vim工具类
+require("plugins.gitsigns") -- git提示
+require("plugins.dashboard") -- 主页

@@ -89,6 +89,8 @@ LemurVim.plugins["neo-tree"] = {
         use_libuv_file_watcher = true,
       },
       window = {
+        max_width = 30,
+        width = 30,
         mappings = {
           ["l"] = "open",
           ["h"] = "close_node",

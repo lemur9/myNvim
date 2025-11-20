@@ -124,26 +124,12 @@ LemurVim.plugins["nvim-cmp"] = {
         if opts.keymap.preset == "super-tab" then -- super-tab
           opts.keymap["<Tab>"] = {
             require("blink.cmp.keymap.presets").get("super-tab")["<Tab>"][1],
-            function()
-              -- 安全访问 LemurVim.cmp
-              if _G.LemurVim and LemurVim.cmp and LemurVim.cmp.map then
-                return LemurVim.cmp.map({ "snippet_forward", "ai_nes", "ai_accept" })
-              else
-                return {}
-              end
-            end,
+            LemurVim.cmp.map({ "snippet_forward", "ai_nes", "ai_accept" }),
             "fallback",
           }
         else -- other presets
           opts.keymap["<Tab>"] = {
-            function()
-              -- 安全访问 LemurVim.cmp
-              if _G.LemurVim and LemurVim.cmp and LemurVim.cmp.map then
-                return LemurVim.cmp.map({ "snippet_forward", "ai_nes", "ai_accept" })
-              else
-                return {}
-              end
-            end,
+            LemurVim.cmp.map({ "snippet_forward", "ai_nes", "ai_accept" }),
             "fallback",
           }
         end
@@ -190,7 +176,7 @@ LemurVim.plugins["nvim-cmp"] = {
       end
     end,
   },
-{
+  {
     "folke/lazydev.nvim",
     ft = "lua",
     cmd = "LazyDev",

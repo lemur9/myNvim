@@ -17,6 +17,7 @@ keymap({ "v" }, "K", ":m '>-2<CR>gv=gv", { silent = true })
 -- 窗口
 keymap({ "n" }, "<leader>sv", "<C-w>v", { silent = true })
 keymap({ "n" }, "<leader>sh", "<C-w>s", { silent = true })
+keymap({ "n" }, "<C-s>", "<Cmd>w<CR>", { silent = true })
 
 -- ------------------- 多模式 ------------------- ---
 keymap({ "n", "v" }, "<C-k>", "5k", { silent = true })
@@ -27,12 +28,9 @@ keymap({ "n", "i" }, "<C-z>", "<Cmd>undo<CR>", { silent = true })
 keymap("n", "<leader>nh", ":nohl<CR>", { silent = true })
 
 -- ------------------- 插件 ------------------- ---
--- nvim-tree
-keymap("n", "<leader>e", ":NvimTreeToggle<CR>", { silent = true })
-
 -- tab切换
-keymap("n", "<A-Left>", ":BufferLineCyclePrev<CR>", { silent = true })
-keymap("n", "<A-Right>", ":BufferLineCycleNext<CR>", { silent = true })
+keymap("n", "<A-Left>", "<Cmd>BufferLineCyclePrev<CR>", { silent = true })
+keymap("n", "<A-Right>", "<Cmd>BufferLineCycleNext<CR>", { silent = true })
 
 -- 开启live-server
 keymap("n", "<leader>lt", ":LiveServerToggle<CR>", { silent = true })

@@ -5,7 +5,7 @@ LemurVim.plugins.lualine = {
         event = 'VeryLazy',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         opts = function()
-            local icons = LemurVim.config.icons.diagnostic_icons
+            local icons = LemurVim.config.icons.diagnostic
             return {
                 options = {
                     theme = 'tokyonight-night',
