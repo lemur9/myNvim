@@ -1,4 +1,4 @@
-LemurVim.plugins.dashboard = {
+LemurVim.plugins["dashboard"] = {
     "nvimdev/dashboard-nvim",
     event = "User IceAfter colorscheme",
     opts = {

@@ -1,11 +1,9 @@
-LemurVim.plugins.markdown = {
+LemurVim.plugins["markdown"] = {
     {
         'iamcco/markdown-preview.nvim',
         ft = { 'markdown' },
         build = "cd app && yarn install",
-        keys = {
-            { "<leader>mk", "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle Markdown Preview" },
-        },
+
         config = function ()
             LemurVim.G.g.mkdp_auto_start = 1
             LemurVim.G.g.mkdp_auto_close = 1

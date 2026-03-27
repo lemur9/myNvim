@@ -1,4 +1,4 @@
-LemurVim.plugins.tokyonight = {
+LemurVim.plugins["tokyonight"] = {
   {
     "folke/tokyonight.nvim",
     lazy = false,

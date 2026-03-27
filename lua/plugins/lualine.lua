@@ -1,5 +1,5 @@
 -- 文件状态展示插件
-LemurVim.plugins.lualine = {
+LemurVim.plugins["lualine"] = {
     {
         'nvim-lualine/lualine.nvim',
         event = 'VeryLazy',

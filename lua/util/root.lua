@@ -80,7 +80,7 @@ function M.realpath(path)
     return nil
   end
   path = vim.uv.fs_realpath(path) or path
-  return LemurVim.norm(path)
+  return M.norm(path)
 end
 
 ---@param spec LazyRootSpec

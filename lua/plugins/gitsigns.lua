@@ -1,4 +1,4 @@
-LemurVim.plugins.gitsigns = {
+LemurVim.plugins["gitsigns"] = {
   "lewis6991/gitsigns.nvim",
   -- event = "LazyFile",
   opts = {

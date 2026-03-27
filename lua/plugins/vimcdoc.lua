@@ -1,4 +1,4 @@
-LemurVim.plugins.vimcdoc = {
+LemurVim.plugins["vimcdoc"] = {
     {
         'yianwillis/vimcdoc',
         event = "CmdLineEnter"

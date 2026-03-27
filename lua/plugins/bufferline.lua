@@ -1,4 +1,4 @@
-LemurVim.plugins.bufferline = {
+LemurVim.plugins["bufferline"] = {
   {
     'akinsho/bufferline.nvim',
     version = "*",
