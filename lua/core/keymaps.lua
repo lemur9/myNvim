@@ -45,3 +45,57 @@ keymap("n", "<leader>fl", "<Cmd>Telescope live_grep<CR>", { silent = true })
 keymap("n", "<leader>fd", "<Cmd>Telescope diagnostics<CR>", { silent = true })
 keymap("n", "<leader>fp", "<Cmd>Telescope projects<CR>", { silent = true })
 keymap("n", "<leader>ft", "<Cmd>TodoTelescope<CR>", { silent = true })
+
+-- lsp 快捷键设置
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
+  callback = function(ev)
+    vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+
+    local opts = { buffer = ev.buf }
+    -- 查看文档（hover）
+    keymap("n", "K", vim.lsp.buf.hover, opts)
+    -- 跳转定义
+    keymap("n", "<space>gd", vim.lsp.buf.definition, opts)
+    -- 跳转声明
+    keymap('n', 'gD', vim.lsp.buf.declaration, opts)
+    -- 查找引用
+    keymap('n', 'gr', function()
+      local params = vim.lsp.util.make_position_params()
+      params.context = { includeDeclaration = false }
+      vim.lsp.buf_request(ev.buf, 'textDocument/references', params, function(err, result)
+        if err then
+          vim.notify("LSP references request failed: " .. (err.message or "unknown error"), vim.log.levels.WARN)
+          return
+        end
+
+        if not result or vim.tbl_isempty(result) then
+          vim.notify("No references found", vim.log.levels.INFO)
+          return
+        end
+
+        local items = {}
+        for _, v in ipairs(result) do
+          table.insert(items, {
+            filename = vim.uri_to_fname(v.uri),
+            lnum = v.range.start.line + 1,
+            col = v.range.start.character + 1,
+            text = "reference",
+          })
+        end
+        vim.fn.setqflist({}, ' ', { title = 'LSP References', items = items })
+        vim.cmd('copen')
+      end)
+    end, opts)
+    -- 跳转实现
+    -- 重命名
+    keymap("n", "<space>rn", vim.lsp.buf.rename, opts)
+    -- 代码操作
+    keymap({ "n", "v" }, "<space>ca", vim.lsp.buf.code_action, opts)
+
+    -- 诊断快捷键
+    vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+  end,
+})

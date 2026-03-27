@@ -1,9 +1,4 @@
-LemurVim.plugins["nvim-cmp"] = {
-  {
-    "hrsh7th/nvim-cmp",
-    optional = true,
-    enabled = false,
-  },
+LemurVim.plugins.blink = {
   {
     "folke/neodev.nvim",
     enabled = false,
@@ -14,18 +9,10 @@ LemurVim.plugins["nvim-cmp"] = {
     build = vim.g.lazyvim_blink_main and "cargo build --release",
     opts_extend = {
       "sources.completion.enabled_providers",
-      "sources.compat",
       "sources.default",
     },
     dependencies = {
       "rafamadriz/friendly-snippets",
-      -- add blink.compat to dependencies
-      {
-        "saghen/blink.compat",
-        optional = true, -- make optional so it's only enabled if any extras need it
-        opts = {},
-        version = not vim.g.lazyvim_blink_main and "*",
-      },
     },
     event = { "InsertEnter", "CmdlineEnter" },
     opts = {
@@ -52,6 +39,7 @@ LemurVim.plugins["nvim-cmp"] = {
         -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- adjusts spacing to ensure icons are aligned
         nerd_font_variant = "mono",
+        kind_icons = {},
       },
 
       completion = {
@@ -79,10 +67,17 @@ LemurVim.plugins["nvim-cmp"] = {
       -- signature = { enabled = true },
 
       sources = {
-        -- adding any nvim-cmp sources here will enable them
-        -- with blink.compat
-        compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
+        per_filetype = {
+          lua = { inherit_defaults = true, "lazydev" },
+        },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            score_offset = 100, -- show at a higher priority than lsp
+          },
+        },
       },
 
       cmdline = {
@@ -104,76 +99,101 @@ LemurVim.plugins["nvim-cmp"] = {
         ["<C-y>"] = { "select_and_accept" },
       },
     },
-    ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
+    ---@param opts blink.cmp.Config
     config = function(_, opts)
-      -- setup compat sources
-      local enabled = opts.sources.default
-      for _, source in ipairs(opts.sources.compat or {}) do
-        opts.sources.providers[source] = vim.tbl_deep_extend(
-          "force",
-          { name = source, module = "blink.compat.source" },
-          opts.sources.providers[source] or {}
-        )
-        if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
-          table.insert(enabled, source)
+      local function get_kind_icons()
+        local lv = rawget(_G, "LemurVim")
+        if not lv or not lv.config or not lv.config.icons or not lv.config.icons.kinds then
+          return {}
+        end
+        return lv.config.icons.kinds
+      end
+
+      local function get_cmp_map()
+        local lv = rawget(_G, "LemurVim")
+        if lv and lv.cmp and type(lv.cmp.map) == "function" then
+          return lv.cmp.map
+        end
+        local ok_util_cmp, util_cmp = pcall(require, "util.cmp")
+        if ok_util_cmp and util_cmp and type(util_cmp.map) == "function" then
+          return util_cmp.map
+        end
+        return function(_, fallback)
+          return function()
+            if type(fallback) == "function" then
+              return fallback()
+            end
+            return fallback
+          end
         end
       end
+
+      opts = opts or {}
+      opts.keymap = opts.keymap or {}
+      opts.sources = opts.sources or {}
+      opts.sources.providers = opts.sources.providers or {}
+      opts.appearance = opts.appearance or {}
+      opts.appearance.kind_icons = vim.tbl_extend("force", opts.appearance.kind_icons or {}, get_kind_icons())
+      local cmp_map = get_cmp_map()
 
       -- add ai_accept to <Tab> key
       if not opts.keymap["<Tab>"] then
         if opts.keymap.preset == "super-tab" then -- super-tab
           opts.keymap["<Tab>"] = {
             require("blink.cmp.keymap.presets").get("super-tab")["<Tab>"][1],
-            LemurVim.cmp.map({ "snippet_forward", "ai_nes", "ai_accept" }),
+            cmp_map({ "snippet_forward", "ai_nes", "ai_accept" }),
             "fallback",
           }
         else -- other presets
           opts.keymap["<Tab>"] = {
-            LemurVim.cmp.map({ "snippet_forward", "ai_nes", "ai_accept" }),
+            cmp_map({ "snippet_forward", "ai_nes", "ai_accept" }),
             "fallback",
           }
         end
       end
 
-      opts.sources.compat = nil
-
       for _, provider in pairs(opts.sources.providers or {}) do
         if provider.kind then
-          local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
-          local kind_idx = #CompletionItemKind + 1
-
-          CompletionItemKind[kind_idx] = provider.kind
-          CompletionItemKind[provider.kind] = kind_idx
-
+          local provider_kind = provider.kind
           local transform_items = provider.transform_items
           provider.transform_items = function(ctx, items)
-            items = transform_items and transform_items(ctx, items) or items
-            for _, item in ipairs(items) do
-              if LemurVim and LemurVim.config and LemurVim.config.icons and LemurVim.config.icons.kinds then
-                item.kind = kind_idx or item.kind
-                item.kind_icon = LemurVim.config.icons.kinds[item.kind_name] or item.kind_icon or nil
+            local resolved_items = items
+            if type(transform_items) == "function" then
+              resolved_items = transform_items(ctx, items)
+            end
+            resolved_items = resolved_items or {}
+
+            local kind_icons = get_kind_icons()
+            if vim.tbl_isempty(kind_icons) then
+              return resolved_items
+            end
+            for _, item in ipairs(resolved_items) do
+              local kind_name = item.kind_name or provider_kind
+              if kind_name and kind_icons[kind_name] then
+                item.kind_icon = kind_icons[kind_name]
               end
             end
-            return items
+            return resolved_items
           end
 
           provider.kind = nil
+        elseif type(provider.transform_items) ~= "function" then
+          provider.transform_items = function(_, items)
+            return items or {}
+          end
+        else
+          local transform_items = provider.transform_items
+          provider.transform_items = function(ctx, items)
+            local resolved_items = transform_items(ctx, items)
+            if resolved_items == nil then
+              return items or {}
+            end
+            return resolved_items
+          end
         end
       end
 
       require("blink.cmp").setup(opts)
-    end,
-  },
-
-  -- add icons
-  {
-    "saghen/blink.cmp",
-    opts = function(_, opts)
-      opts.appearance = opts.appearance or {}
-      -- 安全访问 LemurVim.config
-      if _G.LemurVim and LemurVim.config and LemurVim.config.icons and LemurVim.config.icons.kinds then
-        opts.appearance.kind_icons = vim.tbl_extend("force", opts.appearance.kind_icons or {}, LemurVim.config.icons.kinds)
-      end
     end,
   },
   {
@@ -186,24 +206,6 @@ LemurVim.plugins["nvim-cmp"] = {
         { path = "LazyVim", words = { "LazyVim" } },
         { path = "snacks.nvim", words = { "Snacks" } },
         { path = "lazy.nvim", words = { "LazyVim" } },
-      },
-    },
-  },
-  -- lazydev
-  {
-    "saghen/blink.cmp",
-    opts = {
-      sources = {
-        per_filetype = {
-          lua = { inherit_defaults = true, "lazydev" },
-        },
-        providers = {
-          lazydev = {
-            name = "LazyDev",
-            module = "lazydev.integrations.blink",
-            score_offset = 100, -- show at a higher priority than lsp
-          },
-        },
       },
     },
   },
