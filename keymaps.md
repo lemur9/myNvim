@@ -35,19 +35,6 @@
 | `<A-Right>` | n | 切换到下一个缓冲区 (BufferLineCycleNext) | bufferline |
 | `<leader>lt` | n | 切换 Live Server (LiveServerToggle) | live-server-nvim |
 
-### Telescope 快捷键
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<leader>ff` | n | 查找文件 (根目录) | telescope |
-| `<leader>fh` | n | 查找文件 (搜索目录 ~) | telescope |
-| `<leader>fg` | n | 查找 Git 文件 | telescope |
-| `<leader>fo` | n | 查找旧文件 | telescope |
-| `<leader>fb` | n | 查找缓冲区 | telescope |
-| `<leader>fl` | n | 实时 grep | telescope |
-| `<leader>fd` | n | 诊断信息 | telescope |
-| `<leader>fp` | n | 项目 | telescope |
-| `<leader>ft` | n | Todo 列表 | telescope |
-
 ### LSP 快捷键 (通过 LspAttach 自动命令设置)
 | 按键 | 模式 | 描述 | 插件 |
 |------|------|------|------|
