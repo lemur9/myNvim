@@ -10,7 +10,7 @@ LemurVim.plugins["neo-tree"] = {
     cmd = "Neotree",
     keys = {
       {
-        "<leader>fe",
+        "<leader>e",
         function()
           -- 安全访问 LemurVim.root()
           local root_dir = vim.uv.cwd()
@@ -24,14 +24,36 @@ LemurVim.plugins["neo-tree"] = {
         desc = "Explorer NeoTree (Root Dir)",
       },
       {
-        "<leader>fE",
+        "<leader>E",
         function()
           require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
         end,
         desc = "Explorer NeoTree (cwd)",
       },
-      { "<leader>e", "<leader>fe", desc = "Explorer NeoTree (Root Dir)", remap = true },
-      { "<leader>E", "<leader>fE", desc = "Explorer NeoTree (cwd)", remap = true },
+      {
+        "<C-e>",
+        function()
+          -- 检查 neo-tree 窗口是否存在
+          local win_ids = vim.api.nvim_list_wins()
+          for _, win_id in ipairs(win_ids) do
+            local buf_id = vim.api.nvim_win_get_buf(win_id)
+            local buf_name = vim.api.nvim_buf_get_name(buf_id)
+            if buf_name:match("neo%-tree") then
+              -- 如果当前不在 neo-tree 窗口，则跳转到它
+              if vim.api.nvim_get_current_win() ~= win_id then
+                vim.api.nvim_set_current_win(win_id)
+              else
+                -- 如果已经在 neo-tree 窗口，则跳回上一个窗口
+                vim.cmd("wincmd p")
+              end
+              return
+            end
+          end
+          -- 如果 neo-tree 未打开，则打开它
+          vim.cmd("Neotree focus")
+        end,
+        desc = "Toggle focus between editor and NeoTree",
+      },
       {
         "<leader>ge",
         function()
@@ -45,17 +67,6 @@ LemurVim.plugins["neo-tree"] = {
           require("neo-tree.command").execute({ source = "buffers", toggle = true })
         end,
         desc = "Buffer Explorer",
-      },
-      {
-        "<leader>ee",
-        function()
-          require("neo-tree.command").execute({
-            source = "filesystem",
-            toggle = false,
-            reveal = true,
-          })
-        end,
-        desc = "Jump to Tree (filesystem)",
       },
     },
     deactivate = function()
@@ -109,7 +120,7 @@ LemurVim.plugins["neo-tree"] = {
             end,
             desc = "Open with System Application",
           },
-          ["P"] = { "toggle_preview", config = { use_float = false } },
+          ["P"] = { "toggle_preview", config = { use_float = true } },
         },
       },
       default_component_configs = {
