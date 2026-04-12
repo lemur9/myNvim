@@ -63,7 +63,6 @@ LemurVim.G.g.autoformat = true -- 启用自动格式化功能
 LemurVim.G.g.snacks_animate = true -- 启用 snacks 动画效果
 
 -- LazyVim 选择器设置
--- 可选值: telescope, fzf
 -- 设置为 "auto" 可自动使用通过 `:LazyExtras` 启用的选择器
 LemurVim.G.g.lazyvim_picker = "auto" -- 自动选择文件/符号选择器
 

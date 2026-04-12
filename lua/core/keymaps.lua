@@ -34,14 +34,3 @@ keymap("n", "<A-Right>", "<Cmd>BufferLineCycleNext<CR>", { silent = true })
 
 -- 开启live-server
 keymap("n", "<leader>lt", ":LiveServerToggle<CR>", { silent = true })
-
--- telescope
-keymap("n", "<leader>ff", "<Cmd>Telescope find_files<CR>", { silent = true })
-keymap("n", "<leader>fh", "<Cmd>Telescope find_files search_dirs=~<CR>", { silent = true })
-keymap("n", "<leader>fg", "<Cmd>Telescope git_files<CR>", { silent = true })
-keymap("n", "<leader>fo", "<Cmd>Telescope oldfiles<CR>", { silent = true })
-keymap("n", "<leader>fb", "<Cmd>Telescope buffers<CR>", { silent = true })
-keymap("n", "<leader>fl", "<Cmd>Telescope live_grep<CR>", { silent = true })
-keymap("n", "<leader>fd", "<Cmd>Telescope diagnostics<CR>", { silent = true })
-keymap("n", "<leader>fp", "<Cmd>Telescope projects<CR>", { silent = true })
-keymap("n", "<leader>ft", "<Cmd>TodoTelescope<CR>", { silent = true })
