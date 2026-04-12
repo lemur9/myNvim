@@ -158,6 +158,28 @@ LemurVim.plugins["neo-tree"] = {
           end
         end,
       })
+
+      -- 当进入 neo-tree 窗口时，如果它是唯一的普通窗口，则自动退出
+      vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+        callback = function()
+          -- 检查当前缓冲区是否是 neo-tree
+          if vim.bo.filetype ~= "neo-tree" then
+            return
+          end
+
+          local wins = vim.api.nvim_list_wins()
+          -- 过滤出非浮动窗口
+          local normal_wins = vim.tbl_filter(function(win)
+            local config = vim.api.nvim_win_get_config(win)
+            return config.relative == ""
+          end, wins)
+
+          -- 如果只剩下一个普通窗口（就是当前的 neo-tree），则退出
+          if #normal_wins == 1 then
+            vim.cmd("quit")
+          end
+        end,
+      })
     end,
   },
 }
