@@ -7,53 +7,30 @@ end
 ---@class FzfLuaOpts: lazyvim.util.pick.Opts
 ---@field cmd string?
 
--- 延迟初始化 picker，避免在 LemurVim 初始化之前访问
-local picker_registered = false
-local function ensure_picker_registered()
-	if picker_registered then return true end
-	
-	-- 检查 LemurVim 是否已经初始化
-	if _G.LemurVim and LemurVim.pick then
-		---@type LazyPicker
-		local picker = {
-			name = "fzf",
-			commands = {
-				files = "files",
-			},
+-- 注册 fzf-lua picker
+local function register_picker()
+	-- 强制加载 pick 模块
+	local pick = LemurVim.pick
 
-			---@param command string
-			---@param opts? FzfLuaOpts
-			open = function(command, opts)
-				opts = opts or {}
-				if opts.cmd == nil and command == "git_files" and opts.show_untracked then
-					opts.cmd = "git ls-files --exclude-standard --cached --others"
-				end
-				return require("fzf-lua")[command](opts)
-			end,
-		}
-		
-		if LemurVim.pick.register(picker) then
-			picker_registered = true
-		end
-	end
-	
-	return picker_registered
-end
+	---@type LazyPicker
+	local picker = {
+		name = "fzf",
+		commands = {
+			files = "files",
+		},
 
--- 确保在使用前注册 picker
-local function safe_pick_call(command, opts)
-	if not ensure_picker_registered() then
-		-- 如果注册失败，尝试延迟注册
-		vim.defer_fn(function() ensure_picker_registered() end, 10)
-	end
-	
-	-- 如果 LemurVim 可用，则使用它
-	if _G.LemurVim and LemurVim.pick then
-		return LemurVim.pick.open(command, opts)
-	else
-		-- 否则直接调用 fzf-lua
-		return require("fzf-lua")[command](opts)
-	end
+		---@param command string
+		---@param opts? FzfLuaOpts
+		open = function(command, opts)
+			opts = opts or {}
+			if opts.cmd == nil and command == "git_files" and opts.show_untracked then
+				opts.cmd = "git ls-files --exclude-standard --cached --others"
+			end
+			return require("fzf-lua")[command](opts)
+		end,
+	}
+
+	pick.register(picker)
 end
 
 local function symbols_filter(entry, ctx)
@@ -245,6 +222,9 @@ LemurVim.plugins["fzf-lua"] = {
 			require("fzf-lua").setup(opts)
 		end,
 		init = function()
+			-- 注册 picker
+			register_picker()
+
 			-- 安全处理延迟加载
 			local function setup_ui_select()
 				if _G.LemurVim then
@@ -256,7 +236,7 @@ LemurVim.plugins["fzf-lua"] = {
 					end
 				end
 			end
-			
+
 			-- 尝试立即设置或延迟设置
 			if _G.LemurVim then
 				setup_ui_select()
@@ -269,30 +249,21 @@ LemurVim.plugins["fzf-lua"] = {
 			{ "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
 			{
 				"<leader>,",
-				function()
-					safe_pick_call("buffers", { sort_mru=true, sort_lastused=true })
-				end,
+				LemurVim.pick("buffers", { sort_mru=true, sort_lastused=true }),
 				desc = "Switch Buffer",
 			},
-			{ "<leader>/", function() safe_pick_call("live_grep") end, desc = "Grep (Root Dir)" },
+			{ "<leader>/", LemurVim.pick("live_grep"), desc = "Grep (Root Dir)" },
 			{ "<leader>:", "<cmd>FzfLua command_history<cr>", desc = "Command History" },
-			{ "<leader><space>", function() safe_pick_call("files") end, desc = "Find Files (Root Dir)" },
+			{ "<leader><space>", LemurVim.pick("files"), desc = "Find Files (Root Dir)" },
 			-- find
-			{ "<leader>fb", function() safe_pick_call("buffers", { sort_mru=true, sort_lastused=true }) end, desc = "Buffers" },
+			{ "<leader>fb", LemurVim.pick("buffers", { sort_mru=true, sort_lastused=true }), desc = "Buffers" },
 			{ "<leader>fB", "<cmd>FzfLua buffers<cr>", desc = "Buffers (all)" },
-			{ "<leader>fc", function() 
-				if _G.LemurVim and LemurVim.pick and LemurVim.pick.config_files then
-					local pick_func = LemurVim.pick.config_files()
-					if pickFunc then pickFunc() end
-				else
-					safe_pick_call("files", { cwd = vim.fn.stdpath("config") })
-				end
-			end, desc = "Find Config File" },
-			{ "<leader>ff", function() safe_pick_call("files") end, desc = "Find Files (Root Dir)" },
-			{ "<leader>fF", function() safe_pick_call("files", { root = false }) end, desc = "Find Files (cwd)" },
+			{ "<leader>fc", LemurVim.pick.config_files, desc = "Find Config File" },
+			{ "<leader>ff", LemurVim.pick("files"), desc = "Find Files (Root Dir)" },
+			{ "<leader>fF", LemurVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
 			{ "<leader>fg", "<cmd>FzfLua git_files<cr>", desc = "Find Files (git-files)" },
 			{ "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent" },
-			{ "<leader>fR", function() safe_pick_call("oldfiles", { cwd = vim.uv.cwd() }) end, desc = "Recent (cwd)" },
+			{ "<leader>fR", LemurVim.pick("oldfiles", { cwd = vim.uv.cwd() }), desc = "Recent (cwd)" },
 			-- git
 			{ "<leader>gc", "<cmd>FzfLua git_commits<CR>", desc = "Commits" },
 			{ "<leader>gd", "<cmd>FzfLua git_diff<cr>", desc = "Git Diff (hunks)" },
@@ -308,8 +279,8 @@ LemurVim.plugins["fzf-lua"] = {
 			{ "<leader>sC", "<cmd>FzfLua commands<cr>", desc = "Commands" },
 			{ "<leader>sd", "<cmd>FzfLua diagnostics_workspace<cr>", desc = "Diagnostics" },
 			{ "<leader>sD", "<cmd>FzfLua diagnostics_document<cr>", desc = "Buffer Diagnostics" },
-			{ "<leader>sg", function() safe_pick_call("live_grep") end, desc = "Grep (Root Dir)" },
-			{ "<leader>sG", function() safe_pick_call("live_grep", { root = false }) end, desc = "Grep (cwd)" },
+			{ "<leader>sg", LemurVim.pick("live_grep"), desc = "Grep (Root Dir)" },
+			{ "<leader>sG", LemurVim.pick("live_grep", { root = false }), desc = "Grep (cwd)" },
 			{ "<leader>sh", "<cmd>FzfLua help_tags<cr>", desc = "Help Pages" },
 			{ "<leader>sH", "<cmd>FzfLua highlights<cr>", desc = "Search Highlight Groups" },
 			{ "<leader>sj", "<cmd>FzfLua jumps<cr>", desc = "Jumplist" },
@@ -319,11 +290,11 @@ LemurVim.plugins["fzf-lua"] = {
 			{ "<leader>sm", "<cmd>FzfLua marks<cr>", desc = "Jump to Mark" },
 			{ "<leader>sR", "<cmd>FzfLua resume<cr>", desc = "Resume" },
 			{ "<leader>sq", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix List" },
-			{ "<leader>sw", function() safe_pick_call("grep_cword") end, desc = "Word (Root Dir)" },
-			{ "<leader>sW", function() safe_pick_call("grep_cword", { root = false }) end, desc = "Word (cwd)" },
-			{ "<leader>sw", function() safe_pick_call("grep_visual") end, mode = "x", desc = "Selection (Root Dir)" },
-			{ "<leader>sW", function() safe_pick_call("grep_visual", { root = false }) end, mode = "x", desc = "Selection (cwd)" },
-			{ "<leader>uC", function() safe_pick_call("colorschemes") end, desc = "Colorscheme with Preview" },
+			{ "<leader>sw", LemurVim.pick("grep_cword"), desc = "Word (Root Dir)" },
+			{ "<leader>sW", LemurVim.pick("grep_cword", { root = false }), desc = "Word (cwd)" },
+			{ "<leader>sw", LemurVim.pick("grep_visual"), mode = "x", desc = "Selection (Root Dir)" },
+			{ "<leader>sW", LemurVim.pick("grep_visual", { root = false }), mode = "x", desc = "Selection (cwd)" },
+			{ "<leader>uC", LemurVim.pick("colorschemes"), desc = "Colorscheme with Preview" },
 			{
 				"<leader>ss",
 				function()

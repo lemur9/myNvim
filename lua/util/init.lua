@@ -34,6 +34,12 @@ function M.error(msg, opts)
 	M.notify(msg, opts)
 end
 
+function M.warn(msg, opts)
+	opts = opts or {}
+	opts.level = vim.log.levels.WARN
+	M.notify(msg, opts)
+end
+
 function M.notify(msg, opts)
 	if vim.in_fast_event() then
 		return vim.schedule(function()
@@ -102,6 +108,32 @@ function M.pretty_trace(opts)
 		level = level + 1
 	end
 	return #trace > 0 and ("\n\n# stacktrace:\n" .. table.concat(trace, "\n")) or ""
+end
+
+-- 查找项目根目录
+function M.root(opts)
+	opts = opts or {}
+	local buf = opts.buf or vim.api.nvim_get_current_buf()
+	local path = vim.api.nvim_buf_get_name(buf)
+
+	if path == "" then
+		return vim.fn.getcwd()
+	end
+
+	path = vim.fs.dirname(path)
+
+	-- 查找根目录标记
+	local root_patterns = { ".git", "lua", "package.json", "Makefile" }
+	local root = vim.fs.find(root_patterns, {
+		path = path,
+		upward = true,
+	})[1]
+
+	if root then
+		return vim.fs.dirname(root)
+	end
+
+	return vim.fn.getcwd()
 end
 
 return M
