@@ -91,5 +91,5 @@ function LemurVim_markdown_toggleCheck(needsave)
   elseif line:match('^%s*- %[x%]') then line = line:gsub('%[x%]', '[ ]')
   else return end
   LemurVim.G.fn.setline('.', line)
-  if needsave then LemurVim.command('w') end
+  if needsave then LemurVim.G.command('w') end
 end

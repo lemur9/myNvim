@@ -1,8 +1,5 @@
-if lazyvim_docs then
-	-- In case you don't want to use `:LazyExtras`,
-	-- then you need to set the option below.
-	vim.g.lazyvim_picker = "fzf"
-end
+-- 设置 fzf 作为默认选择器
+vim.g.lazyvim_picker = "fzf"
 
 ---@class FzfLuaOpts: lazyvim.util.pick.Opts
 ---@field cmd string?
@@ -35,19 +32,8 @@ end
 
 local function symbols_filter(entry, ctx)
 	if ctx.symbols_filter == nil then
-		-- 检查是否可以访问 LemurVim 配置
-		local config_available = false
-		if _G.LemurVim and package.loaded["core.init"] then
-			local config = require("core.init")
-			if config and config.get_kind_filter then
-				ctx.symbols_filter = config.get_kind_filter(ctx.bufnr) or false
-				config_available = true
-			end
-		end
-		
-		if not config_available then
-			ctx.symbols_filter = false
-		end
+		-- 默认不过滤符号，显示所有类型
+		ctx.symbols_filter = false
 	end
 	if ctx.symbols_filter == false then
 		return true

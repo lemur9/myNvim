@@ -105,7 +105,14 @@ LemurVim.plugins.lsp = {
       }
 
       -- autocompletion
-      -- local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      -- 获取 LSP 客户端能力配置
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+      -- 如果使用 blink.cmp，尝试获取其 capabilities
+      local has_blink, blink = pcall(require, 'blink.cmp')
+      if has_blink and blink.get_lsp_capabilities then
+        capabilities = vim.tbl_deep_extend('force', capabilities, blink.get_lsp_capabilities())
+      end
 
       -- on attch
       local on_attach = function(client, bufnr)
@@ -150,7 +157,7 @@ LemurVim.plugins.lsp = {
       for _, lsp in ipairs(servers) do
         vim.lsp.config[lsp] = {
           on_attach = on_attach,
-          -- capabilities = capabilities,
+          capabilities = capabilities,
         }
       end
 

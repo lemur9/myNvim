@@ -48,7 +48,7 @@ function M.expand(snippet)
     local msg = ok and "Failed to parse snippet,\nbut was able to fix it automatically."
       or ("Failed to parse snippet.\n" .. err)
 
-    LazyVim[ok and "warn" or "error"](
+    LemurVim[ok and "warn" or "error"](
       ([[%s
 ```%s
 %s
