@@ -232,19 +232,18 @@ LemurVim.plugins.lsp = {
           "--add-opens",
           "java.base/java.lang=ALL-UNNAMED",
           --增加lombok插件支持，getter setter good bye
-          "-javaagent:/home/lemur/.local/share/nvim/mason/packages/jdtls/lombok.jar",
-          "-Xbootclasspath/a:/home/lemur/.local/share/nvim/mason/packages/jdtls/lombok.jar",
+          "-javaagent:" .. vim.fn.stdpath('data') .. "/mason/packages/jdtls/lombok.jar",
+          "-Xbootclasspath/a:" .. vim.fn.stdpath('data') .. "/mason/packages/jdtls/lombok.jar",
           "-jar",
-          "/home/lemur/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.7.100.v20251014-1222.jar",
+          vim.fn.glob(vim.fn.stdpath('data') .. "/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
           "-configuration",
-          "/home/lemur/.local/share/nvim/mason/packages/jdtls/config_linux",
+          vim.fn.stdpath('data') .. "/mason/packages/jdtls/config_linux",
           "-data",
-          "/home/lemur/.local/share/nvim/mason/packages/jdtls/workspace/folder"
+          vim.fn.stdpath('data') .. "/mason/packages/jdtls/workspace/folder"
         },
         root_dir = vim.fs.dirname(vim.fs.find({".git", "pom.xml", "build.gradle"}, { upward = true })[1]),
         init_options = {
-          bundles = {
-          }
+          bundles = {}
         },
         settings = {
           java = {
