@@ -6,6 +6,7 @@ LemurVim.plugins["neo-tree"] = {
     dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-lua/plenary.nvim",
+      "folke/snacks.nvim",
     },
     cmd = "Neotree",
     keys = {
@@ -140,7 +141,7 @@ LemurVim.plugins["neo-tree"] = {
     },
     config = function(_, opts)
       local function on_move(data)
-        Snacks.rename.on_rename_file(data.source, data.destination)
+        require("snacks").rename.on_rename_file(data.source, data.destination)
       end
 
       local events = require("neo-tree.events")
