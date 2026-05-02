@@ -15,7 +15,6 @@ require("plugins.indent-line") -- 方法标识线
 require("plugins.bufferline") -- tab页缓冲区
 
 require("plugins.trans") -- 翻译
-require("plugins.vimcdoc") -- vim中文帮助文档
 require("plugins.markdown") -- markdown预览
 require("plugins.which-key") -- 按键映射
 require("plugins.snacks") -- lazy.vim工具类

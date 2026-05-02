@@ -97,12 +97,8 @@ LemurVim.plugins.lsp = {
         end,
       })
 
-      -- border for float win
-      require('lspconfig.ui.windows').default_options.border = 'rounded'
-      local handlers = {
-        ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
-        ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
-      }
+      -- border for float win (nvim 0.11+)
+      vim.o.winborder = 'rounded'
 
       -- autocompletion
       -- 获取 LSP 客户端能力配置
@@ -164,7 +160,6 @@ LemurVim.plugins.lsp = {
       -- lua
       vim.lsp.config["lua_ls"] = {
         on_attach = on_attach,
-        handlers = handlers,
         capabilities = capabilities,
         settings = {
           Lua = {
