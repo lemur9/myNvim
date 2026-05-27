@@ -160,24 +160,43 @@ LemurVim.plugins["neo-tree"] = {
         end,
       })
 
-      -- 当进入 neo-tree 窗口时，如果它是唯一的普通窗口，则自动退出
-      vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+      -- 关闭 tab 后焦点若落在 neo-tree，跳到普通窗口
+      vim.api.nvim_create_autocmd("TabEnter", {
         callback = function()
-          -- 检查当前缓冲区是否是 neo-tree
-          if vim.bo.filetype ~= "neo-tree" then
-            return
+          if vim.bo.filetype ~= "neo-tree" then return end
+          -- 先尝试跳回上一个窗口
+          vim.cmd("wincmd p")
+          if vim.bo.filetype == "neo-tree" then
+            -- 上一个也是 neo-tree，找第一个普通窗口
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              local ft = vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_win_get_buf(win) })
+              if ft ~= "neo-tree" then
+                vim.api.nvim_set_current_win(win)
+                break
+              end
+            end
           end
+        end,
+      })
 
-          local wins = vim.api.nvim_list_wins()
-          -- 过滤出非浮动窗口
-          local normal_wins = vim.tbl_filter(function(win)
-            local config = vim.api.nvim_win_get_config(win)
-            return config.relative == ""
-          end, wins)
-
-          -- 如果只剩下一个普通窗口（就是当前的 neo-tree），则退出
-          if #normal_wins == 1 then
-            vim.cmd("quit")
+      vim.api.nvim_create_autocmd("QuitPre", {
+        callback = function()
+          if vim.bo.filetype == "neo-tree" then return end
+          local cur_win = vim.api.nvim_get_current_win()
+          local other_normal_wins = 0
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if win ~= cur_win then
+              local cfg = vim.api.nvim_win_get_config(win)
+              if cfg.relative == "" then
+                local ft = vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_win_get_buf(win) })
+                if ft ~= "neo-tree" then
+                  other_normal_wins = other_normal_wins + 1
+                end
+              end
+            end
+          end
+          if other_normal_wins == 0 then
+            vim.cmd("Neotree close")
           end
         end,
       })

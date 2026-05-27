@@ -19,10 +19,19 @@ LemurVim.plugins["nvim-cmp"] = {
     },
     dependencies = {
       "rafamadriz/friendly-snippets",
-      -- add blink.compat to dependencies
+      {
+        "Exafunction/codeium.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        build = ":Codeium Auth",
+        opts = {
+          enable_chat = false,
+          enable_cmp_source = false,
+          virtual_text = { enabled = false },
+        },
+      },
       {
         "saghen/blink.compat",
-        optional = true, -- make optional so it's only enabled if any extras need it
+        optional = true,
         opts = {},
         version = not vim.g.lazyvim_blink_main and "*",
       },
@@ -56,9 +65,13 @@ LemurVim.plugins["nvim-cmp"] = {
 
       completion = {
         accept = {
-          -- experimental auto-brackets support
           auto_brackets = {
             enabled = true,
+          },
+        },
+        list = {
+          selection = {
+            preselect = false,
           },
         },
         menu = {
@@ -82,7 +95,22 @@ LemurVim.plugins["nvim-cmp"] = {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = { "lsp", "path", "snippets", "buffer", "codeium" },
+        providers = {
+          codeium = {
+            name = "Codeium",
+            module = "codeium.blink",
+            score_offset = 100,
+            async = true,
+
+            transform_items = function(_, items)
+              for _, item in ipairs(items) do
+                item.kind_icon = "🤖"
+              end
+              return items
+            end,
+          },
+        },
       },
 
       cmdline = {
