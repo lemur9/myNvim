@@ -17,6 +17,9 @@ LemurVim.plugins.dashboard = {
         string.format("                      %s                       ", LemurVim.version),
         " ",
       },
+      -- 注意：doom 主题通过 `lines[i]:find('%w')`（行内是否含 ASCII 字母/数字）
+      -- 来反推 center 条目的索引，因此每条 desc 必须至少包含一个 ASCII 字符。
+      -- 纯中文/emoji 的 desc 会导致索引错位，触发 "attempt to index a nil value"。
       center = {
         {
           icon = "  ",
@@ -25,7 +28,7 @@ LemurVim.plugins.dashboard = {
         },
         {
           icon = "  ",
-          desc = "编辑配置      ",
+          desc = "编辑配置 (Edit Config)",
           action = string.format("edit ~/.config/nvim/init.lua"),
         },
         {
