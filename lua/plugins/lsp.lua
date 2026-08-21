@@ -43,7 +43,6 @@ LemurVim.plugins.lsp = {
     'neovim/nvim-lspconfig',
     event = 'VeryLazy',
     dependencies = {
-      { 'folke/neodev.nvim', opts = {}, lazy = false, priority = 1000 },
       { 'j-hui/fidget.nvim', opts = {} },
     },
     config = function()
@@ -83,17 +82,16 @@ LemurVim.plugins.lsp = {
         callback = function(ev)
           vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-          local opts = { buffer = ev.buf }
-          -- 文档显示
-          vim.keymap.set('n', '<space>gh', vim.lsp.buf.hover, opts)
-          -- 查看定义
-          vim.keymap.set('n', '<space>gd', vim.lsp.buf.definition, opts)
+          -- 悬停文档
+          vim.keymap.set('n', '<space>gh', vim.lsp.buf.hover, { buffer = ev.buf, desc = 'LSP 悬停文档' })
+          -- 跳转到定义
+          vim.keymap.set('n', '<space>gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = '跳转到定义' })
           -- 查询引用
-          vim.keymap.set('n', '<space>gr', vim.lsp.buf.references, opts)
+          vim.keymap.set('n', '<space>gr', vim.lsp.buf.references, { buffer = ev.buf, desc = '查询引用' })
           -- 重命名
-          vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-          -- 代码建议
-          vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+          vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, { buffer = ev.buf, desc = '重命名符号' })
+          -- 代码操作
+          vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, { buffer = ev.buf, desc = '代码操作' })
         end,
       })
 
@@ -181,11 +179,10 @@ LemurVim.plugins.lsp = {
         },
       }
 
-      -- vue
-      local vue_language_server_path =
-      vim.fn.expand('$MASON/packages/vue-language-server/node_modules/@vue/language-server')
-      local typescript_language_server_path =
-      vim.fn.expand('$MASON/packages/typescript-language-server/node_modules/typescript/lib')
+      -- vue（Mason 安装目录统一使用 stdpath('data')）
+      local mason_packages = vim.fn.stdpath('data') .. '/mason/packages'
+      local vue_language_server_path = mason_packages .. '/vue-language-server/node_modules/@vue/language-server'
+      local typescript_language_server_path = mason_packages .. '/typescript-language-server/node_modules/typescript/lib'
 
       vim.lsp.config["ts_ls"] = {
         on_attach = on_attach,
@@ -236,7 +233,10 @@ LemurVim.plugins.lsp = {
           "-data",
           vim.fn.stdpath('data') .. "/mason/packages/jdtls/workspace/folder"
         },
-        root_dir = vim.fs.dirname(vim.fs.find({".git", "pom.xml", "build.gradle"}, { upward = true })[1]),
+        root_dir = function()
+          local marker = vim.fs.find({ ".git", "pom.xml", "build.gradle" }, { upward = true })[1]
+          return marker and vim.fs.dirname(marker) or vim.uv.cwd()
+        end,
         init_options = {
           bundles = {}
         },

@@ -22,14 +22,14 @@ LemurVim.plugins["neo-tree"] = {
           end
           require("neo-tree.command").execute({ toggle = true, dir = root_dir })
         end,
-        desc = "Explorer NeoTree (Root Dir)",
+        desc = "文件树 (根目录)",
       },
       {
         "<leader>E",
         function()
           require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
         end,
-        desc = "Explorer NeoTree (cwd)",
+        desc = "文件树 (当前目录)",
       },
       {
         "<C-e>",
@@ -53,21 +53,21 @@ LemurVim.plugins["neo-tree"] = {
           -- 如果 neo-tree 未打开，则打开它
           vim.cmd("Neotree focus")
         end,
-        desc = "Toggle focus between editor and NeoTree",
+        desc = "编辑器 / 文件树焦点切换",
       },
       {
         "<leader>ge",
         function()
           require("neo-tree.command").execute({ source = "git_status", toggle = true })
         end,
-        desc = "Git Explorer",
+        desc = "Git 文件树",
       },
       {
         "<leader>be",
         function()
           require("neo-tree.command").execute({ source = "buffers", toggle = true })
         end,
-        desc = "Buffer Explorer",
+        desc = "缓冲区列表",
       },
     },
     deactivate = function()
@@ -78,7 +78,7 @@ LemurVim.plugins["neo-tree"] = {
       -- because `cwd` is not set up properly.
       vim.api.nvim_create_autocmd("BufEnter", {
         group = vim.api.nvim_create_augroup("Neotree_start_directory", { clear = true }),
-        desc = "Start Neo-tree with directory",
+        desc = "按目录启动文件树",
         once = true,
         callback = function()
           if package.loaded["neo-tree"] then
@@ -113,13 +113,13 @@ LemurVim.plugins["neo-tree"] = {
               local path = node:get_id()
               vim.fn.setreg("+", path, "c")
             end,
-            desc = "Copy Path to Clipboard",
+            desc = "复制路径到剪贴板",
           },
           ["O"] = {
             function(state)
               require("lazy.util").open(state.tree:get_node().path, { system = true })
             end,
-            desc = "Open with System Application",
+            desc = "用系统应用打开",
           },
           ["P"] = { "toggle_preview", config = { use_float = true } },
         },

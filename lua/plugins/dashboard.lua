@@ -1,6 +1,6 @@
 LemurVim.plugins.dashboard = {
     "nvimdev/dashboard-nvim",
-    event = "User IceAfter colorscheme",
+    event = "User " .. LemurVim.colorscheme.event,
     opts = {
         theme = "doom",
         config = {
@@ -20,26 +20,26 @@ LemurVim.plugins.dashboard = {
             center = {
                 {
                     icon = "  ",
-                    desc = "Lazy Profile",
+                    desc = "Lazy 性能分析",
                     action = "Lazy profile",
                 },
                 {
                     icon = "  ",
-                    desc = "Edit preferences   ",
+                    desc = "编辑配置      ",
                     action = string.format("edit ~/.config/nvim/init.lua"),
                 },
                 {
                     icon = "  ",
-                    desc = "Mason",
+                    desc = "Mason 管理",
                     action = "Mason",
                 },
                 {
                     icon = "  ",
-                    desc = "About LemurVim",
+                    desc = "关于 LemurVim",
                     action = "LemurAbout",
                 },
             },
-            footer = { "🧊 Hope that you enjoy using LemurNvim 😀😀😀" },
+            footer = { "🧊 希望你喜欢使用 LemurNvim 😀😀😀" },
         },
     },
     config = function(_, opts)

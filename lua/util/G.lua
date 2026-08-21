@@ -28,14 +28,14 @@ end
 -- })
 function G.hi(hls)
   local colormode = G.o.termguicolors and '' or 'cterm'
-  for group,color in pairs(hls) do
-    local opt = color
+  for group, color in pairs(hls) do
+    local opt = {}
     if color.fg then opt[colormode .. 'fg'] = color.fg end
     if color.bg then opt[colormode .. 'bg'] = color.bg end
-    opt.bold = color.bold
-    opt.underline = color.underline
-    opt.italic = color.italic
-    opt.strikethrough = color.strikethrough
+    if color.bold ~= nil then opt.bold = color.bold end
+    if color.underline ~= nil then opt.underline = color.underline end
+    if color.italic ~= nil then opt.italic = color.italic end
+    if color.strikethrough ~= nil then opt.strikethrough = color.strikethrough end
     G.api.nvim_set_hl(0, group, opt)
   end
 end

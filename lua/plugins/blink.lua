@@ -5,10 +5,6 @@ LemurVim.plugins["nvim-cmp"] = {
     enabled = false,
   },
   {
-    "folke/neodev.nvim",
-    enabled = false,
-  },
-  {
     "saghen/blink.cmp",
     version = not vim.g.lazyvim_blink_main and "*",
     build = vim.g.lazyvim_blink_main and "cargo build --release",
@@ -39,18 +35,7 @@ LemurVim.plugins["nvim-cmp"] = {
     event = { "InsertEnter", "CmdlineEnter" },
     opts = {
       snippets = {
-        expand = function(snippet, _)
-          -- 安全访问 LemurVim.cmp
-          if LemurVim and LemurVim.cmp and LemurVim.cmp.expand then
-            return LemurVim.cmp.expand(snippet)
-          else
-            -- fallback to default expand function if available
-            local luasnip_status, luasnip = pcall(require, "luasnip")
-            if luasnip_status then
-              return luasnip.lsp_expand(snippet)
-            end
-          end
-        end,
+        preset = "luasnip",
       },
 
       appearance = {

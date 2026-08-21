@@ -8,7 +8,7 @@ LemurVim.plugins.lualine = {
             local icons = LemurVim.config.icons.diagnostic
             return {
                 options = {
-                    theme = 'tokyonight-night',
+                    theme = 'auto',
                     component_separators = { right = '|' },
                     section_separators = '',
                 },

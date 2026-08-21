@@ -1,6 +1,3 @@
--- 设置 fzf 作为默认选择器
-vim.g.lazyvim_picker = "fzf"
-
 ---@class FzfLuaOpts: lazyvim.util.pick.Opts
 ---@field cmd string?
 
@@ -42,7 +39,7 @@ local function symbols_filter(entry, ctx)
 end
 
 LemurVim.plugins["fzf-lua"] = {
-	desc = "Awesome picker for FZF (alternative to Telescope)",
+	desc = "基于 FZF 的模糊查找器",
 	{
 		"ibhagwan/fzf-lua",
 		cmd = "FzfLua",
@@ -236,51 +233,50 @@ LemurVim.plugins["fzf-lua"] = {
 			{
 				"<leader>,",
 				LemurVim.pick("buffers", { sort_mru=true, sort_lastused=true }),
-				desc = "Switch Buffer",
+				desc = "切换缓冲区",
 			},
-			{ "<leader>/", LemurVim.pick("live_grep"), desc = "Grep (Root Dir)" },
-			{ "<leader>:", "<cmd>FzfLua command_history<cr>", desc = "Command History" },
-			{ "<leader><space>", LemurVim.pick("files"), desc = "Find Files (Root Dir)" },
+			{ "<leader>/", LemurVim.pick("live_grep"), desc = "Grep 搜索 (根目录)" },
+			{ "<leader>:", "<cmd>FzfLua command_history<cr>", desc = "命令历史" },
+			{ "<leader><space>", LemurVim.pick("files"), desc = "查找文件 (根目录)" },
 			-- find
-			{ "<leader>fb", LemurVim.pick("buffers", { sort_mru=true, sort_lastused=true }), desc = "Buffers" },
-			{ "<leader>fB", "<cmd>FzfLua buffers<cr>", desc = "Buffers (all)" },
-			{ "<leader>fc", LemurVim.pick.config_files, desc = "Find Config File" },
-			{ "<leader>ff", LemurVim.pick("files"), desc = "Find Files (Root Dir)" },
-			{ "<leader>fF", LemurVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
-			{ "<leader>fg", "<cmd>FzfLua git_files<cr>", desc = "Find Files (git-files)" },
-			{ "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent" },
-			{ "<leader>fR", LemurVim.pick("oldfiles", { cwd = vim.uv.cwd() }), desc = "Recent (cwd)" },
+			{ "<leader>fb", LemurVim.pick("buffers", { sort_mru=true, sort_lastused=true }), desc = "缓冲区" },
+			{ "<leader>fB", "<cmd>FzfLua buffers<cr>", desc = "缓冲区 (全部)" },
+			{ "<leader>fc", LemurVim.pick.config_files, desc = "查找配置文件" },
+			{ "<leader>ff", LemurVim.pick("files"), desc = "查找文件 (根目录)" },
+			{ "<leader>fF", LemurVim.pick("files", { root = false }), desc = "查找文件 (当前目录)" },
+			{ "<leader>fg", "<cmd>FzfLua git_files<cr>", desc = "查找文件 (Git)" },
+			{ "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "最近文件" },
+			{ "<leader>fR", LemurVim.pick("oldfiles", { cwd = vim.uv.cwd() }), desc = "最近文件 (当前目录)" },
 			-- git
-			{ "<leader>gc", "<cmd>FzfLua git_commits<CR>", desc = "Commits" },
-			{ "<leader>gd", "<cmd>FzfLua git_diff<cr>", desc = "Git Diff (hunks)" },
-			{ "<leader>gl", "<cmd>FzfLua git_commits<CR>", desc = "Commits" },
-			{ "<leader>gs", "<cmd>FzfLua git_status<CR>", desc = "Status" },
-			{ "<leader>gS", "<cmd>FzfLua git_stash<cr>", desc = "Git Stash" },
+			{ "<leader>gc", "<cmd>FzfLua git_commits<CR>", desc = "Git 提交" },
+			{ "<leader>gd", "<cmd>FzfLua git_diff<cr>", desc = "Git 差异" },
+			{ "<leader>gl", "<cmd>FzfLua git_commits<CR>", desc = "Git 提交" },
+			{ "<leader>gs", "<cmd>FzfLua git_status<CR>", desc = "Git 状态" },
+			{ "<leader>gS", "<cmd>FzfLua git_stash<cr>", desc = "Git 储藏" },
 			-- search
-			{ '<leader>s"', "<cmd>FzfLua registers<cr>", desc = "Registers" },
-			{ "<leader>s/", "<cmd>FzfLua search_history<cr>", desc = "Search History" },
-			{ "<leader>sa", "<cmd>FzfLua autocmds<cr>", desc = "Auto Commands" },
-			{ "<leader>sb", "<cmd>FzfLua lines<cr>", desc = "Buffer Lines" },
-			{ "<leader>sc", "<cmd>FzfLua command_history<cr>", desc = "Command History" },
-			{ "<leader>sC", "<cmd>FzfLua commands<cr>", desc = "Commands" },
-			{ "<leader>sd", "<cmd>FzfLua diagnostics_workspace<cr>", desc = "Diagnostics" },
-			{ "<leader>sD", "<cmd>FzfLua diagnostics_document<cr>", desc = "Buffer Diagnostics" },
-			{ "<leader>sg", LemurVim.pick("live_grep"), desc = "Grep (Root Dir)" },
-			{ "<leader>sG", LemurVim.pick("live_grep", { root = false }), desc = "Grep (cwd)" },
-			{ "<leader>sh", "<cmd>FzfLua help_tags<cr>", desc = "Help Pages" },
-			{ "<leader>sH", "<cmd>FzfLua highlights<cr>", desc = "Search Highlight Groups" },
-			{ "<leader>sj", "<cmd>FzfLua jumps<cr>", desc = "Jumplist" },
-			{ "<leader>sk", "<cmd>FzfLua keymaps<cr>", desc = "Key Maps" },
-			{ "<leader>sl", "<cmd>FzfLua loclist<cr>", desc = "Location List" },
-			{ "<leader>sM", "<cmd>FzfLua man_pages<cr>", desc = "Man Pages" },
-			{ "<leader>sm", "<cmd>FzfLua marks<cr>", desc = "Jump to Mark" },
-			{ "<leader>sR", "<cmd>FzfLua resume<cr>", desc = "Resume" },
-			{ "<leader>sq", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix List" },
-			{ "<leader>sw", LemurVim.pick("grep_cword"), desc = "Word (Root Dir)" },
-			{ "<leader>sW", LemurVim.pick("grep_cword", { root = false }), desc = "Word (cwd)" },
-			{ "<leader>sw", LemurVim.pick("grep_visual"), mode = "x", desc = "Selection (Root Dir)" },
-			{ "<leader>sW", LemurVim.pick("grep_visual", { root = false }), mode = "x", desc = "Selection (cwd)" },
-			{ "<leader>uC", LemurVim.pick("colorschemes"), desc = "Colorscheme with Preview" },
+			{ '<leader>s"', "<cmd>FzfLua registers<cr>", desc = "寄存器" },
+			{ "<leader>s/", "<cmd>FzfLua search_history<cr>", desc = "搜索历史" },
+			{ "<leader>sa", "<cmd>FzfLua autocmds<cr>", desc = "自动命令" },
+			{ "<leader>sb", "<cmd>FzfLua lines<cr>", desc = "缓冲区行" },
+			{ "<leader>sc", "<cmd>FzfLua command_history<cr>", desc = "命令历史" },
+			{ "<leader>sC", "<cmd>FzfLua commands<cr>", desc = "命令" },
+			{ "<leader>sd", "<cmd>FzfLua diagnostics_workspace<cr>", desc = "工作区诊断" },
+			{ "<leader>sD", "<cmd>FzfLua diagnostics_document<cr>", desc = "缓冲区诊断" },
+			{ "<leader>sg", LemurVim.pick("live_grep"), desc = "Grep 搜索 (根目录)" },
+			{ "<leader>sG", LemurVim.pick("live_grep", { root = false }), desc = "Grep 搜索 (当前目录)" },
+			{ "<leader>sh", "<cmd>FzfLua help_tags<cr>", desc = "帮助文档" },
+			{ "<leader>sH", "<cmd>FzfLua highlights<cr>", desc = "高亮组" },
+			{ "<leader>sj", "<cmd>FzfLua jumps<cr>", desc = "跳转列表" },
+			{ "<leader>sk", "<cmd>FzfLua keymaps<cr>", desc = "键位映射" },
+			{ "<leader>sl", "<cmd>FzfLua loclist<cr>", desc = "位置列表" },
+			{ "<leader>sM", "<cmd>FzfLua man_pages<cr>", desc = "手册页" },
+			{ "<leader>sm", "<cmd>FzfLua marks<cr>", desc = "跳转到标记" },
+			{ "<leader>sR", "<cmd>FzfLua resume<cr>", desc = "恢复上次搜索" },
+			{ "<leader>sq", "<cmd>FzfLua quickfix<cr>", desc = "快速修复列表" },
+			{ "<leader>sw", LemurVim.pick("grep_cword"), desc = "搜索当前词 (根目录)" },
+			{ "<leader>sW", LemurVim.pick("grep_cword", { root = false }), desc = "搜索当前词 (当前目录)" },
+			{ "<leader>sw", LemurVim.pick("grep_visual"), mode = "x", desc = "搜索选中 (根目录)" },
+			{ "<leader>sW", LemurVim.pick("grep_visual", { root = false }), mode = "x", desc = "搜索选中 (当前目录)" },
 			{
 				"<leader>ss",
 				function()
@@ -288,7 +284,7 @@ LemurVim.plugins["fzf-lua"] = {
 						regex_filter = symbols_filter,
 					})
 				end,
-				desc = "Goto Symbol",
+				desc = "跳转符号 (文档)",
 			},
 			{
 				"<leader>sS",
@@ -297,7 +293,7 @@ LemurVim.plugins["fzf-lua"] = {
 						regex_filter = symbols_filter,
 					})
 				end,
-				desc = "Goto Symbol (Workspace)",
+				desc = "跳转符号 (工作区)",
 			},
 		},
 	},
@@ -308,8 +304,8 @@ LemurVim.plugins["fzf-lua"] = {
 		opts = {},
         -- stylua: ignore
         keys = {
-          { "<leader>st", function() require("todo-comments.fzf").todo() end, desc = "Todo" },
-          { "<leader>sT", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
+          { "<leader>st", function() require("todo-comments.fzf").todo() end, desc = "TODO 注释" },
+          { "<leader>sT", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "TODO/FIX/FIXME" },
         },
 	},
 
@@ -320,10 +316,10 @@ LemurVim.plugins["fzf-lua"] = {
         -- stylua: ignore
         ["*"] = {
           keys = {
-            { "gd", "<cmd>FzfLua lsp_definitions     jump1=true ignore_current_line=true<cr>", desc = "Goto Definition", has = "definition" },
-            { "gr", "<cmd>FzfLua lsp_references      jump1=true ignore_current_line=true<cr>", desc = "References", nowait = true },
-            { "gI", "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>", desc = "Goto Implementation" },
-            { "gy", "<cmd>FzfLua lsp_typedefs        jump1=true ignore_current_line=true<cr>", desc = "Goto T[y]pe Definition" },
+            { "gd", "<cmd>FzfLua lsp_definitions     jump1=true ignore_current_line=true<cr>", desc = "跳转到定义", has = "definition" },
+            { "gr", "<cmd>FzfLua lsp_references      jump1=true ignore_current_line=true<cr>", desc = "引用", nowait = true },
+            { "gI", "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>", desc = "跳转到实现" },
+            { "gy", "<cmd>FzfLua lsp_typedefs        jump1=true ignore_current_line=true<cr>", desc = "跳转到类型定义" },
           }
         },
 			},

@@ -1,7 +1,6 @@
 -- 基础设置
 -- 设置 Python3 的路径，用于 Neovim 的 Python 插件支持
 LemurVim.G.g.python3_host_prog = os.getenv("PYTHON") -- export PYTHON=$(which python3)
-LemurVim.G.g.editorconfig = false -- 禁用 editorconfig 支持
 LemurVim.G.opt.showcmd = true -- 在状态栏显示当前命令
 LemurVim.G.opt.encoding = "utf-8" -- 设置编码为 UTF-8
 LemurVim.G.opt.wildmenu = true -- 启用命令行补全菜单
@@ -55,21 +54,6 @@ LemurVim.G.g.loaded_netrwPlugin = 1
 LemurVim.G.g.mapleader = " " -- 设置全局映射前导键为空格键
 LemurVim.G.g.maplocalleader = "\\" -- 设置局部映射前导键为反斜杠
 
--- LazyVim 自动格式化设置
-LemurVim.G.g.autoformat = true -- 启用自动格式化功能
-
--- Snacks 动画设置
--- 设置为 `false` 可全局禁用所有 snacks 动画
-LemurVim.G.g.snacks_animate = true -- 启用 snacks 动画效果
-
--- LazyVim 选择器设置
--- 设置为 "auto" 可自动使用通过 `:LazyExtras` 启用的选择器
-LemurVim.G.g.lazyvim_picker = "auto" -- 自动选择文件/符号选择器
-
--- LazyVim 代码补全引擎设置
--- 可选值: nvim-cmp, blink.cmp
--- 设置为 "auto" 可自动使用通过 `:LazyExtras` 启用的补全引擎
-LemurVim.G.g.lazyvim_cmp = "auto" -- 自动选择代码补全引擎
 
 -- 如果补全引擎支持 AI 源，则优先使用而非内联建议
 LemurVim.G.g.ai_cmp = true -- 启用 AI 补全源
@@ -81,21 +65,10 @@ LemurVim.G.g.ai_cmp = true -- 启用 AI 补全源
 -- * 签名为 `function(buf) -> string|string[]` 的函数
 LemurVim.G.g.root_spec = { "lsp", { ".git", "lua" }, "cwd" } -- 根目录检测规则
 
--- 可选的终端设置
--- 这会设置 `vim.o.shell` 并为以下终端做额外配置：
--- * pwsh
--- * powershell
--- LazyVim.terminal.setup("pwsh")  -- 终端环境配置（已注释）
 
 -- 设置在使用 `util.root.detectors.lsp` 检测 LSP 根目录时需要忽略的 LSP 服务器
 LemurVim.G.g.root_lsp_ignore = { "copilot" } -- 忽略 Copilot LSP 服务器用于根目录检测
 
--- 隐藏弃用警告
-LemurVim.G.g.deprecation_warnings = false -- 禁用弃用警告提示
-
--- 在 lualine 状态栏中显示来自 Trouble 的当前文档符号位置
--- 可通过设置 `vim.b.trouble_lualine = false` 为缓冲区禁用此功能
-LemurVim.G.g.trouble_lualine = true -- 启用 Trouble 插件的 lualine 集成
 
 LemurVim.G.opt.autowrite = true -- 启用自动写入（离开缓冲区时自动保存）
 -- 仅在非 SSH 环境下设置剪贴板，确保 OSC 52 集成能自动工作
@@ -112,7 +85,6 @@ LemurVim.G.opt.fillchars = { -- 设置各种填充字符
 	diff = "╱", -- 差异区域填充字符
 	eob = " ", -- 文件结尾填充字符
 }
--- LemurVim.G.opt.formatexpr = "v:lua.LazyVim.format.formatexpr()"  -- 设置格式化表达式
 LemurVim.G.opt.formatoptions = "jcroqlnt" -- tcqj 格式化选项
 LemurVim.G.opt.grepformat = "%f:%l:%c:%m" -- grep 输出格式
 LemurVim.G.opt.grepprg = "rg --vimgrep" -- 使用 ripgrep 作为 grep 程序
@@ -137,9 +109,8 @@ LemurVim.G.opt.spelllang = { "en" } -- 拼写检查语言设置为英语
 LemurVim.G.opt.splitbelow = true -- 新窗口在当前窗口下方分割
 LemurVim.G.opt.splitkeep = "screen" -- 分割窗口时保持屏幕内容
 LemurVim.G.opt.splitright = true -- 新窗口在当前窗口右侧分割
--- LemurVim.G.opt.statuscolumn = [[%!v:lua.LazyVim.statuscolumn()]]              -- 自定义状态列
 LemurVim.G.opt.tabstop = 2 -- 制表符宽度为 2 个空格
-LemurVim.G.opt.timeoutlen = LemurVim.G.g.vscode and 1000 or 300 -- 键盘超时时间（降低以快速触发 which-key）
+LemurVim.G.opt.timeoutlen = 300 -- 键盘超时时间（降低以快速触发 which-key）
 LemurVim.G.opt.undofile = true -- 启用撤销文件持久化
 LemurVim.G.opt.undolevels = 10000 -- 设置撤销级别
 LemurVim.G.opt.updatetime = 200 -- 更新时间间隔（保存交换文件并触发 CursorHold）

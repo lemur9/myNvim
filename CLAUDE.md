@@ -43,18 +43,26 @@ lua/
 ├── plugins/        # 插件配置
 │   ├── init.lua    # 插件加载入口
 │   ├── blink.lua   # blink.cmp 补全框架
+│   ├── snippets.lua # LuaSnip 代码片段
 │   ├── lsp.lua     # LSP 配置（mason、lspconfig）
 │   ├── fzf.lua     # fzf-lua 模糊查找
 │   ├── neo-tree.lua # 文件树
+│   ├── theme.lua   # 主题（由 util/colorscheme 注册表生成）
 │   └── ...         # 其他插件配置
+├── snippets/       # 自定义代码片段（文件名即 filetype，all.lua 全局）
+│   ├── all.lua
+│   ├── lua.lua
+│   ├── java.lua
+│   └── markdown.lua
 └── util/           # 工具模块
     ├── init.lua    # 工具模块入口（懒加载）
     ├── G.lua       # Vim API 封装
     ├── icons.lua   # 图标定义
     ├── cmp.lua     # 补全相关工具
+    ├── colorscheme.lua # 主题管理
     ├── lazy.lua    # lazy.nvim 初始化
-    ├── plugin.lua  # 插件工具（LazyFile 事件）
-    └── pick.lua    # 选择器工具
+    ├── pick.lua    # 选择器工具
+    └── root.lua    # 项目根目录探测
 ```
 
 ## 插件配置模式
@@ -82,19 +90,27 @@ LemurVim.plugins["plugin-name"] = {
 - 自动安装的 LSP：jdtls, lua_ls, clangd, bashls, html, cssls, ts_ls, vue_ls, jsonls, tailwindcss, dockerls
 - Java LSP (jdtls) 有特殊配置，包含 Lombok 注解处理支持
 - LSP 快捷键通过 LspAttach 自动命令设置：
-  - `K` - 查看文档
+  - `<space>gh` - 悬停文档
   - `<space>gd` - 跳转到定义
-  - `<space>gD` - 跳转到声明
-  - `<space>rn` - 重命名
+  - `<space>gr` - 查询引用
+  - `<space>rn` - 重命名符号
   - `<space>ca` - 代码操作
+- fzf-lua 覆盖了部分 LSP 跳转（gd / gr / gI / gy 走 fzf-lua，见 fzf.lua）
 
 ### 补全框架（lua/plugins/blink.lua）
 
 - 使用 blink.cmp 替代 nvim-cmp（nvim-cmp 已禁用）
-- 集成 friendly-snippets 和 blink.compat
-- 补全源：lsp, path, snippets, buffer
+- 片段引擎使用 LuaSnip（preset = "luasnip"），并集成 blink.compat
+- 补全源：lsp, path, snippets, buffer, codeium
 - 支持命令行补全（cmdline）
 - 快捷键：`<C-y>` 选择并接受，`<Tab>` 用于代码片段跳转和 AI 补全
+
+### 代码片段（lua/plugins/snippets.lua）
+
+- 使用 LuaSnip 作为片段引擎，加载 friendly-snippets（VSCode 格式）
+- 自定义片段放在 `lua/snippets/*.lua`（Lua 格式），文件名即 filetype，`all.lua` 全局生效
+- 常用触发器：`date` / `time`（全局）、`lfun` / `module`（lua）、`main` / `sout` / `fori`（java）、`todo` / `done` / `code`（markdown）
+- 新增片段：在 `lua/snippets/` 下新建或编辑对应文件即可，重启后生效
 
 ### 模糊查找（lua/plugins/fzf.lua）
 
@@ -105,6 +121,14 @@ LemurVim.plugins["plugin-name"] = {
   - `<leader>,` - 切换缓冲区
   - `<leader>ff` - 查找文件
   - `<leader>fg` - Git 文件
+
+### 主题系统（lua/util/colorscheme.lua + lua/plugins/theme.lua）
+
+- 可用主题注册在 `LemurVim.colorscheme.themes`：tokyonight（默认）、catppuccin、nightfox、kanagawa、onedark、rose-pine
+- `LemurVim.colorscheme.set(name)` 应用主题：懒加载插件 → setup → colorscheme → 触发 `User LemurAfter colorscheme` 事件
+- dashboard 监听该事件，在主题设置完成后加载（参考 IceNvim 的 `IceAfter colorscheme` 机制）
+- `:LemurColorscheme` 命令或 `<leader>uC` 打开 fzf-lua 选择主题，选择结果持久化到 `stdpath("data")/colorscheme`
+- 添加新主题：在 `themes` 表中加一项（key 需同时是 colorscheme 名与模块名，repo 指向对应插件仓库）
 
 ### Markdown 支持（lua/core/autocmd.lua）
 
@@ -182,4 +206,6 @@ LemurVim.plugins["new-plugin"] = {
 - 所有插件配置必须注册到 `LemurVim.plugins` 表中
 - 使用 `LemurVim.G` 而非直接使用 `vim.api` 以保持代码一致性
 - 修改配置后需要重启 Neovim 或重新加载配置
+- 所有快捷键的 `desc` 使用中文，便于 which-key 提示
+- 使用 stylua 统一代码格式（见 `.stylua.toml`），提交前运行 `stylua lua/ init.lua`
 - Java 项目需要在项目根目录包含 `.git`、`pom.xml` 或 `build.gradle` 文件以正确识别项目根目录

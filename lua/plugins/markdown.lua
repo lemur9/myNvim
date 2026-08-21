@@ -4,7 +4,7 @@ LemurVim.plugins.markdown = {
         ft = { 'markdown' },
         build = "cd app && yarn install",
         keys = {
-            { "<leader>mk", "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle Markdown Preview" },
+            { "<leader>mk", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown 预览" },
         },
         config = function ()
             LemurVim.G.g.mkdp_auto_start = 1
