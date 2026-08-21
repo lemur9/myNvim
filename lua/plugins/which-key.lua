@@ -1,6 +1,6 @@
 LemurVim.plugins["which-key"] = {
-	"folke/which-key.nvim",
-	config = function()
-		require("which-key").setup({})
-	end,
+  "folke/which-key.nvim",
+  config = function()
+    require("which-key").setup({})
+  end,
 }

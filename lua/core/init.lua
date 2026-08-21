@@ -4,21 +4,12 @@ LemurVim.config = M
 LemurVim.version = "1.0.0"
 
 local defaults = {
-  icons = LemurVim.icons
+  icons = LemurVim.icons,
 }
-
-local options
-
-function M.setup(opts)
-  options = vim.tbl_deep_extend("force", defaults, opts or {}) or {}
-end
 
 setmetatable(M, {
   __index = function(_, key)
-    if options == nil then
-      return vim.deepcopy(defaults)[key]
-    end
-    return options[key]
+    return defaults[key]
   end,
 })
 

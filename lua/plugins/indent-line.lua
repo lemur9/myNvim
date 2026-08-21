@@ -1,11 +1,11 @@
 LemurVim.plugins["indent-blankline"] = {
-    -- indent line
+  -- indent line
   {
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     opts = {
       indent = {
-        char = '▏',
+        char = "▏",
       },
     },
   },

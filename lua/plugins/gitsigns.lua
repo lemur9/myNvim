@@ -52,5 +52,5 @@ LemurVim.plugins.gitsigns = {
       LemurVim.G.map("n", "<leader>ghD", function() gs.diffthis("~") end,  { buffer = buffer, desc = "与上一个提交比较", silent = true })
       LemurVim.G.map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>",  { buffer = buffer, desc = "选择变更块", silent = true })
     end,
-  }
+  },
 }

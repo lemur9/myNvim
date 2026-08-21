@@ -30,11 +30,7 @@ function M.register(picker)
 
   if M.picker and M.picker.name ~= picker.name then
     LemurVim.warn(
-      "`LemurVim.pick`: picker already set to `"
-      .. M.picker.name
-      .. "`,\nignoring new picker `"
-      .. picker.name
-      .. "`"
+      "`LemurVim.pick`: picker already set to `" .. M.picker.name .. "`,\nignoring new picker `" .. picker.name .. "`"
     )
     return false
   end

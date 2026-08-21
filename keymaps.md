@@ -1,293 +1,440 @@
-# Neovim 快捷键大全
+# LemurVim 快捷键中文导航
 
-本文档列出了当前 Neovim 配置中的所有快捷键，包括自定义快捷键、各插件定义的快捷键以及 Neovim 默认快捷键。
+> 本文档按模块整理当前 Neovim 配置的全部快捷键，与 `lua/` 下的配置一一对应。
+> **Leader 键为空格（`<space>`）**，下文 `<leader>` 均表示空格。表中「模式」列：n=正常、i=插入、v=可视（字符）、x=可视（行/块）、t=终端。
 
-## 自定义快捷键 (lua/core/keymaps.lua)
+## 目录
 
-这些快捷键在核心键位映射文件中定义。
+- [〇、前缀速查](#〇前缀速查)
+- [一、核心快捷键](#一核心快捷键)
+- [二、模糊查找 fzf-lua](#二模糊查找-fzf-lua)
+- [三、文件树 neo-tree](#三文件树-neo-tree)
+- [四、LSP 语言服务](#四lsp-语言服务)
+- [五、代码补全 blink.cmp](#五代码补全-blinkcmp)
+- [六、Git gitsigns](#六git-gitsigns)
+- [七、Markdown 与待办系统](#七markdown-与待办系统)
+- [八、翻译 Trans.nvim](#八翻译-transnvim)
+- [九、主题切换](#九主题切换)
+- [十、其他工具](#十其他工具)
+- [十一、代码片段触发器](#十一代码片段触发器)
+- [十二、Neovim 默认快捷键](#十二neovim-默认快捷键)
+
+---
+
+## 〇、前缀速查
+
+| 前缀 | 功能 | 示例 |
+|------|------|------|
+| `<leader>f` | 文件 / 缓冲区查找 | `ff` 查找文件 |
+| `<leader>g` | Git（fzf-lua） | `gs` Git 状态 |
+| `<leader>s` | 搜索 / 符号 | `sg` Grep 搜索 |
+| `<leader>gh` | Git 变更块（gitsigns） | `ghs` 暂存当前块 |
+| `<leader>e` / `<leader>E` | 文件树 | `e` 文件树（根目录） |
+| `<space>g` | LSP 跳转 | `<space>gd` 跳转到定义 |
+| `<leader>u` | 工具 | `uC` 切换主题 |
+
+---
+
+## 一、核心快捷键
+
+来源：`lua/core/keymaps.lua`
 
 ### 插入模式
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `jk` | i | 退出插入模式 | 自定义 |
 
-### 视觉模式
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `J` | v | 向下移动选中行 | 自定义 |
-| `K` | v | 向上移动选中行 | 自定义 |
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `jk` | i | 退出插入模式 |
+
+### 可视模式
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `J` | v | 向下移动选中行 |
+| `K` | v | 向上移动选中行 |
 
 ### 正常模式
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<leader>sv` | n | 垂直分割窗口 (`<C-w>v`) | 自定义 |
-| `<leader>sh` | n | 水平分割窗口 (`<C-w>s`) | 自定义 |
-| `<C-s>` | n | 保存文件 (`:w`) | 自定义 |
-| `<C-k>` | n, v | 向上移动5行 | 自定义 |
-| `<C-j>` | n, v | 向下移动5行 | 自定义 |
-| `<C-z>` | n, i | 撤销 (`undo`) | 自定义 |
-| `<leader>nh` | n | 取消搜索高亮 (`:nohl`) | 自定义 |
 
-### 插件快捷键 (在 keymaps.lua 中定义)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<A-Left>` | n | 切换到上一个缓冲区 (BufferLineCyclePrev) | bufferline |
-| `<A-Right>` | n | 切换到下一个缓冲区 (BufferLineCycleNext) | bufferline |
-| `<leader>lt` | n | 切换 Live Server (LiveServerToggle) | live-server-nvim |
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<leader>sv` | n | 垂直分割窗口 |
+| `<leader>sh` | n | 水平分割窗口 |
+| `<C-s>` | n | 保存文件 |
+| `<leader>nh` | n | 取消搜索高亮 |
+| `<A-Left>` | n | 上一个缓冲区 |
+| `<A-Right>` | n | 下一个缓冲区 |
+| `<leader>lt` | n | 切换 Live Server |
+| `<leader>uC` | n | 切换主题 |
 
-### LSP 快捷键 (通过 LspAttach 自动命令设置)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `K` | n | 查看文档 (hover) | nvim-lspconfig |
-| `<space>gd` | n | 跳转到定义 | nvim-lspconfig |
-| `<space>gD` | n | 跳转到声明 | nvim-lspconfig |
-| `<space>rn` | n | 重命名符号 | nvim-lspconfig |
-| `<space>ca` | n, v | 代码操作 | nvim-lspconfig |
+### 多模式
 
-## 插件快捷键
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<C-k>` | n, v | 向上移动 5 行 |
+| `<C-j>` | n, v | 向下移动 5 行 |
+| `<C-z>` | n, i | 撤销 |
 
-### fzf-lua (lua/plugins/fzf.lua)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<c-j>` | t | 在 fzf 终端中向下移动 | fzf-lua |
-| `<c-k>` | t | 在 fzf 终端中向上移动 | fzf-lua |
-| `<leader>,` | n | 切换缓冲区 (最近使用排序) | fzf-lua |
-| `<leader>/` | n | Grep (根目录) | fzf-lua |
-| `<leader>:` | n | 命令历史 | fzf-lua |
-| `<leader><space>` | n | 查找文件 (根目录) | fzf-lua |
-| `<leader>fb` | n | 缓冲区 (最近使用排序) | fzf-lua |
-| `<leader>fB` | n | 缓冲区 (全部) | fzf-lua |
-| `<leader>fc` | n | 查找配置文件 | fzf-lua |
-| `<leader>ff` | n | 查找文件 (根目录) | fzf-lua |
-| `<leader>fF` | n | 查找文件 (当前工作目录) | fzf-lua |
-| `<leader>fg` | n | 查找文件 (git-files) | fzf-lua |
-| `<leader>fr` | n | 最近文件 | fzf-lua |
-| `<leader>fR` | n | 最近文件 (当前工作目录) | fzf-lua |
-| `<leader>gc` | n | Git 提交 | fzf-lua |
-| `<leader>gd` | n | Git 差异 (hunks) | fzf-lua |
-| `<leader>gl` | n | Git 提交 | fzf-lua |
-| `<leader>gs` | n | Git 状态 | fzf-lua |
-| `<leader>gS` | n | Git 储藏 | fzf-lua |
-| `<leader>s"` | n | 寄存器 | fzf-lua |
-| `<leader>s/` | n | 搜索历史 | fzf-lua |
-| `<leader>sa` | n | 自动命令 | fzf-lua |
-| `<leader>sb` | n | 缓冲区行 | fzf-lua |
-| `<leader>sc` | n | 命令历史 | fzf-lua |
-| `<leader>sC` | n | 命令 | fzf-lua |
-| `<leader>sd` | n | 工作区诊断 | fzf-lua |
-| `<leader>sD` | n | 缓冲区诊断 | fzf-lua |
-| `<leader>sg` | n | Grep (根目录) | fzf-lua |
-| `<leader>sG` | n | Grep (当前工作目录) | fzf-lua |
-| `<leader>sh` | n | 帮助页面 | fzf-lua |
-| `<leader>sH` | n | 搜索高亮组 | fzf-lua |
-| `<leader>sj` | n | 跳转列表 | fzf-lua |
-| `<leader>sk` | n | 键位映射 | fzf-lua |
-| `<leader>sl` | n | 位置列表 | fzf-lua |
-| `<leader>sM` | n | 手册页 | fzf-lua |
-| `<leader>sm` | n | 标记 | fzf-lua |
-| `<leader>sR` | n | 恢复上次搜索 | fzf-lua |
-| `<leader>sq` | n | 快速修复列表 | fzf-lua |
-| `<leader>sw` | n | 搜索当前单词 (根目录) | fzf-lua |
-| `<leader>sW` | n | 搜索当前单词 (当前工作目录) | fzf-lua |
-| `<leader>sw` | x | 搜索视觉选择 (根目录) | fzf-lua |
-| `<leader>sW` | x | 搜索视觉选择 (当前工作目录) | fzf-lua |
-| `<leader>uC` | n | 配色方案预览 | fzf-lua |
-| `<leader>ss` | n | 跳转到符号 (文档) | fzf-lua |
-| `<leader>sS` | n | 跳转到符号 (工作区) | fzf-lua |
+---
 
-**注意**: fzf-lua 还定义了以下 LSP 快捷键 (覆盖默认映射):
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `gd` | n | 跳转到定义 (使用 fzf-lua) | fzf-lua |
-| `gr` | n | 引用 (使用 fzf-lua) | fzf-lua |
-| `gI` | n | 跳转到实现 (使用 fzf-lua) | fzf-lua |
-| `gy` | n | 跳转到类型定义 (使用 fzf-lua) | fzf-lua |
+## 二、模糊查找 fzf-lua
 
-**fzf 内部键位映射** (在 fzf 界面中使用):
-- `ctrl-q`: 选择全部并接受
-- `ctrl-u`: 上半页
-- `ctrl-d`: 下半页
-- `ctrl-x`: 跳转
-- `ctrl-f`: 预览页向下
-- `ctrl-b`: 预览页向上
-- `ctrl-t`: 在 trouble 中打开 (如果安装)
+来源：`lua/plugins/fzf.lua`。`<leader><space>` 是最常用的「查找文件」。
 
-### neo-tree (lua/plugins/neo-tree.lua)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<leader>fe` | n | 文件资源管理器 (根目录) | neo-tree |
-| `<leader>fE` | n | 文件资源管理器 (当前工作目录) | neo-tree |
-| `<leader>e` | n | 同 `<leader>fe` (重映射) | neo-tree |
-| `<leader>E` | n | 同 `<leader>fE` (重映射) | neo-tree |
-| `<leader>ge` | n | Git 资源管理器 | neo-tree |
-| `<leader>be` | n | 缓冲区资源管理器 | neo-tree |
-| `<leader>ee` | n | 跳转到树 (文件系统) | neo-tree |
+### 文件 / 缓冲区
 
-**neo-tree 窗口内映射** (当 neo-tree 窗口激活时):
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `l` | n | 打开节点 | neo-tree |
-| `h` | n | 关闭节点 | neo-tree |
-| `<space>` | n | 无操作 (禁用) | neo-tree |
-| `Y` | n | 复制路径到剪贴板 | neo-tree |
-| `O` | n | 用系统应用程序打开 | neo-tree |
-| `P` | n | 切换预览 | neo-tree |
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<leader><space>` | n | 查找文件（根目录） |
+| `<leader>ff` | n | 查找文件（根目录） |
+| `<leader>fF` | n | 查找文件（当前目录） |
+| `<leader>fg` | n | 查找文件（Git 跟踪） |
+| `<leader>fr` | n | 最近文件 |
+| `<leader>fR` | n | 最近文件（当前目录） |
+| `<leader>fc` | n | 查找配置文件 |
+| `<leader>,` | n | 切换缓冲区 |
+| `<leader>fb` | n | 缓冲区 |
+| `<leader>fB` | n | 缓冲区（全部） |
 
-### blink.cmp (lua/plugins/blink.lua)
-补全框架快捷键 (在补全菜单出现时有效):
+### Git
 
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<C-y>` | i | 选择并接受 | blink.cmp |
-| `<Tab>` | i | 片段前进 / AI 接受 / 回退 | blink.cmp |
-| `<CR>` (回车) | i | 确认选择 (根据预设) | blink.cmp |
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<leader>gc` | n | Git 提交 |
+| `<leader>gl` | n | Git 提交 |
+| `<leader>gd` | n | Git 差异 |
+| `<leader>gs` | n | Git 状态 |
+| `<leader>gS` | n | Git 储藏 |
 
-**注意**: blink.cmp 使用 `preset = "enter"` 配置，具体行为请参考插件文档。
+### 搜索
 
-### Trans.nvim (lua/plugins/trans.lua)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `mm` | n, x | 翻译 | Trans.nvim |
-| `mk` | n, x | 自动播放 | Trans.nvim |
-| `mi` | n | 从输入翻译 | Trans.nvim |
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<leader>/` | n | Grep 搜索（根目录） |
+| `<leader>sg` | n | Grep 搜索（根目录） |
+| `<leader>sG` | n | Grep 搜索（当前目录） |
+| `<leader>sw` | n | 搜索当前词（根目录） |
+| `<leader>sW` | n | 搜索当前词（当前目录） |
+| `<leader>sw` | x | 搜索选中内容（根目录） |
+| `<leader>sW` | x | 搜索选中内容（当前目录） |
+| `<leader>s/` | n | 搜索历史 |
 
-### markdown-preview.nvim (lua/plugins/markdown.lua)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<leader>mk` | n | 切换 Markdown 预览 | markdown-preview.nvim |
+### 符号 / 跳转
 
-### snacks.nvim (lua/plugins/snacks.lua)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `<leader>ca` | n | 代码操作 | snacks.nvim |
-| `<leader>nf` | n | 查找文件 | snacks.nvim |
-| `<leader>nh` | n | 通知历史 | snacks.nvim |
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<leader>ss` | n | 跳转符号（当前文档） |
+| `<leader>sS` | n | 跳转符号（工作区） |
+| `<leader>sj` | n | 跳转列表 |
+| `<leader>sl` | n | 位置列表 |
+| `<leader>sm` | n | 跳转到标记 |
+| `<leader>sk` | n | 键位映射 |
+| `<leader>sh` | n | 帮助文档 |
+| `<leader>sH` | n | 高亮组 |
+| `<leader>sM` | n | 手册页 |
 
-### gitsigns.nvim (lua/plugins/gitsigns.lua)
-| 按键 | 模式 | 描述 | 插件 |
-|------|------|------|------|
-| `]h` | n | 下一个变更块 | gitsigns.nvim |
-| `[h` | n | 上一个变更块 | gitsigns.nvim |
-| `]H` | n | 最后一个变更块 | gitsigns.nvim |
-| `[H` | n | 第一个变更块 | gitsigns.nvim |
-| `<leader>ghs` | n, v | 暂存当前块 | gitsigns.nvim |
-| `<leader>ghr` | n, v | 重置当前块 | gitsigns.nvim |
-| `<leader>ghS` | n | 暂存整个缓冲区 | gitsigns.nvim |
-| `<leader>ghu` | n | 撤销暂存块 | gitsigns.nvim |
-| `<leader>ghR` | n | 重置整个缓冲区 | gitsigns.nvim |
-| `<leader>ghp` | n | 行内预览块 | gitsigns.nvim |
-| `<leader>ghb` | n | 显示当前行作者信息 | gitsigns.nvim |
-| `<leader>ghB` | n | 显示缓冲区作者信息 | gitsigns.nvim |
-| `<leader>ghd` | n | 与索引比较 | gitsigns.nvim |
-| `<leader>ghD` | n | 与上一个提交比较 | gitsigns.nvim |
-| `ih` | o, x | 选择变更块 | gitsigns.nvim |
+### 诊断 / 其他
 
-## Neovim 默认快捷键
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<leader>sd` | n | 工作区诊断 |
+| `<leader>sD` | n | 缓冲区诊断 |
+| `<leader>sq` | n | 快速修复列表 |
+| `<leader>sR` | n | 恢复上次搜索 |
+| `<leader>sc` | n | 命令历史 |
+| `<leader>sC` | n | 命令 |
+| `<leader>sa` | n | 自动命令 |
+| `<leader>sb` | n | 缓冲区行 |
+| `<leader>s"` | n | 寄存器 |
+| `<leader>st` | n | TODO 注释 |
+| `<leader>sT` | n | TODO / FIX / FIXME |
+| `<leader>:` | n | 命令历史 |
 
-以下是一些常用的 Neovim 默认快捷键，这些快捷键没有在配置中显式定义，但始终可用。
+### fzf-lua 覆盖的 LSP 跳转
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `gd` | n | 跳转到定义 |
+| `gr` | n | 引用 |
+| `gI` | n | 跳转到实现 |
+| `gy` | n | 跳转到类型定义 |
+
+### fzf 窗口内键位
+
+| 按键 | 说明 |
+|------|------|
+| `ctrl-q` | 全选并接受 |
+| `ctrl-u` / `ctrl-d` | 上半页 / 下半页 |
+| `ctrl-f` / `ctrl-b` | 预览页向下 / 向上 |
+| `ctrl-x` | 跳转 |
+| `ctrl-r` / `alt-c` | 切换根目录 / 当前目录 |
+| `alt-i` | 忽略文件开关 |
+| `alt-h` | 隐藏文件开关 |
+| `ctrl-t` | 在 Trouble 中打开（若已安装） |
+
+---
+
+## 三、文件树 neo-tree
+
+来源：`lua/plugins/neo-tree.lua`
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<leader>e` | n | 文件树（根目录） |
+| `<leader>E` | n | 文件树（当前目录） |
+| `<C-e>` | n | 编辑器 / 文件树焦点切换 |
+| `<leader>ge` | n | Git 文件树 |
+| `<leader>be` | n | 缓冲区列表 |
+
+### 文件树窗口内
+
+| 按键 | 说明 |
+|------|------|
+| `l` | 打开节点 |
+| `h` | 关闭节点 |
+| `<space>` | 禁用（无操作） |
+| `Y` | 复制路径到剪贴板 |
+| `O` | 用系统应用打开 |
+| `P` | 预览开关 |
+
+---
+
+## 四、LSP 语言服务
+
+来源：`lua/plugins/lsp.lua`（LspAttach 时对当前缓冲区生效）
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<space>gh` | n | 悬停文档 |
+| `<space>gd` | n | 跳转到定义 |
+| `<space>gr` | n | 查询引用 |
+| `<space>rn` | n | 重命名符号 |
+| `<space>ca` | n, v | 代码操作 |
+
+> 注：`gd` / `gr` / `gI` / `gy` 在 fzf-lua 的映射下走模糊查找，见上节。
+
+---
+
+## 五、代码补全 blink.cmp
+
+来源：`lua/plugins/blink.lua`
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<C-y>` | i | 选择并接受 |
+| `<Tab>` | i | 片段占位符跳转 / AI 补全接受 |
+| `<CR>` | i | 确认选择（preset = enter） |
+
+> 补全源：lsp、path、snippets、buffer、codeium（🤖）。
+
+---
+
+## 六、Git gitsigns
+
+来源：`lua/plugins/gitsigns.lua`
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `]h` | n | 下一个变更块 |
+| `[h` | n | 上一个变更块 |
+| `]H` | n | 最后一个变更块 |
+| `[H` | n | 第一个变更块 |
+| `<leader>ghs` | n, v | 暂存当前块 |
+| `<leader>ghr` | n, v | 重置当前块 |
+| `<leader>ghS` | n | 暂存整个缓冲区 |
+| `<leader>ghu` | n | 撤销暂存块 |
+| `<leader>ghR` | n | 重置整个缓冲区 |
+| `<leader>ghp` | n | 行内预览块 |
+| `<leader>ghb` | n | 显示当前行作者信息 |
+| `<leader>ghB` | n | 显示缓冲区作者信息 |
+| `<leader>ghd` | n | 与索引比较 |
+| `<leader>ghD` | n | 与上一个提交比较 |
+| `ih` | o, x | 选择变更块 |
+
+---
+
+## 七、Markdown 与待办系统
+
+来源：`lua/core/autocmd.lua` + `lua/plugins/markdown.lua`
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `<cr>` | n | 切换任务状态（`[ ]` ↔ `[x]`） |
+| `<2-LeftMouse>` | n | 双击切换任务状态 |
+| `<leader>mk` | n | Markdown 预览 |
+
+日期格式（自动高亮）：`D:YYYY-MM-DD` 截止日期（红色）、`S:YYYY-MM-DD` 开始日期。
+
+相关命令：
+
+| 命令 | 说明 |
+|------|------|
+| `:MarkdownPreviewToggle` | 预览开关 |
+| `:TableModeToggle` | 表格模式开关（vim-table-mode） |
+| `:PasteImg` | 粘贴剪贴板图片（md-img-paste） |
+
+---
+
+## 八、翻译 Trans.nvim
+
+来源：`lua/plugins/trans.lua`
+
+| 按键 | 模式 | 说明 |
+|------|------|------|
+| `mm` | n, x | 翻译 |
+| `mk` | n, x | 自动朗读 |
+| `mi` | n | 输入翻译 |
+
+---
+
+## 九、主题切换
+
+来源：`lua/plugins/theme.lua` + `lua/util/colorscheme.lua`
+
+| 按键 / 命令 | 说明 |
+|------|------|
+| `<leader>uC` | 切换主题（fzf-lua 选择） |
+| `:LemurColorscheme` | 打开主题选择 |
+
+可用主题：tokyonight（默认）、catppuccin、nightfox、kanagawa、onedark、rose-pine。选择结果自动记忆，重启后保持。
+
+---
+
+## 十、其他工具
+
+### snacks.nvim（来源：`lua/plugins/snacks.lua`）
+
+| 按键 | 说明 |
+|------|------|
+| `<leader>ca` | 代码操作 |
+| `<leader>nf` | 查找文件 |
+| `<leader>nh` | 通知历史 |
+
+### dashboard-nvim（启动页）
+
+| 命令 / 项 | 说明 |
+|------|------|
+| `:Dashboard` | 打开启动页 |
+| `Lazy 性能分析` | 打开 Lazy profile |
+| `编辑配置` | 编辑 `init.lua` |
+| `Mason 管理` | 打开 Mason |
+| `关于 LemurVim` | 关于页 |
+
+---
+
+## 十一、代码片段触发器
+
+来源：`lua/snippets/`（LuaSnip）。输入触发器后按 `<Tab>` 展开，`<Tab>` 在占位符间跳转。
+
+### 全局（all.lua）
+
+| 触发器 | 展开结果 |
+|--------|----------|
+| `date` | 当前日期 `YYYY-MM-DD` |
+| `time` | 当前时间 `HH:MM:SS` |
+| `deadline` | `D:YYYY-MM-DD`（截止日期） |
+| `startdate` | `S:YYYY-MM-DD`（开始日期） |
+
+### Lua（lua.lua）
+
+| 触发器 | 展开结果 |
+|--------|----------|
+| `lfun` | 局部函数模板 |
+| `pdb` | `print(...)` 调试 |
+| `pcall` | pcall 保护调用模板 |
+| `module` | 模块模板（`local M = {}` … `return M`） |
+
+### Java（java.lua）
+
+| 触发器 | 展开结果 |
+|--------|----------|
+| `main` | main 方法 |
+| `sout` | `System.out.println` |
+| `fori` | 普通 for 循环 |
+| `foreach` | 增强 for 循环 |
+| `try` | try-catch 模板 |
+
+### Markdown（markdown.lua）
+
+| 触发器 | 展开结果 |
+|--------|----------|
+| `todo` | `- [ ] ` 待办 |
+| `done` | `- [x] ` 已完成 |
+| `todod` | 待办 + 截止日期 |
+| `code` | 代码块 |
+
+> 另外 friendly-snippets 提供了海量现成片段（各类语言通用模板），开箱即用。
+
+---
+
+## 十二、Neovim 默认快捷键
+
+以下为 Neovim 自带、配置未覆盖的常用键位。
 
 ### 移动
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `h` | n, v | 左移 |
-| `j` | n, v | 下移 |
-| `k` | n, v | 上移 |
-| `l` | n, v | 右移 |
-| `w` | n, v | 跳到下一个单词开头 |
-| `b` | n, v | 跳到上一个单词开头 |
-| `e` | n, v | 跳到单词末尾 |
-| `0` | n, v | 跳到行首 |
-| `^` | n, v | 跳到行第一个非空字符 |
-| `$` | n, v | 跳到行尾 |
-| `gg` | n, v | 跳到文件开头 |
-| `G` | n, v | 跳到文件末尾 |
-| `Ctrl-d` | n, v | 向下滚动半页 |
-| `Ctrl-u` | n, v | 向上滚动半页 |
-| `Ctrl-f` | n, v | 向下翻页 |
-| `Ctrl-b` | n, v | 向上翻页 |
-| `%` | n, v | 跳转到匹配的括号 |
+
+| 按键 | 说明 |
+|------|------|
+| `h` / `j` / `k` / `l` | 左 / 下 / 上 / 右 |
+| `w` / `b` / `e` | 下一个词首 / 上一个词首 / 词尾 |
+| `0` / `^` / `$` | 行首 / 行首非空 / 行尾 |
+| `gg` / `G` | 文件开头 / 末尾 |
+| `<C-d>` / `<C-u>` | 向下 / 向上半页 |
+| `<C-f>` / `<C-b>` | 向下 / 向上翻页 |
+| `%` | 跳转匹配括号 |
 
 ### 编辑
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `i` | n | 进入插入模式 (光标前) |
-| `a` | n | 进入插入模式 (光标后) |
-| `I` | n | 进入插入模式 (行首) |
-| `A` | n | 进入插入模式 (行尾) |
-| `o` | n | 在下方新行插入 |
-| `O` | n | 在上方新行插入 |
-| `x` | n | 删除当前字符 |
-| `dd` | n | 删除当前行 |
-| `yy` | n | 复制当前行 |
-| `p` | n | 在光标后粘贴 |
-| `P` | n | 在光标前粘贴 |
-| `u` | n | 撤销 |
-| `Ctrl-r` | n | 重做 |
-| `.` | n | 重复上次编辑 |
+
+| 按键 | 说明 |
+|------|------|
+| `i` / `a` / `I` / `A` | 插入（光标前 / 后 / 行首 / 行尾） |
+| `o` / `O` | 下方 / 上方新行 |
+| `x` / `dd` / `yy` | 删字符 / 删行 / 复制行 |
+| `p` / `P` | 粘贴（后 / 前） |
+| `u` / `<C-r>` | 撤销 / 重做 |
+| `.` | 重复上次编辑 |
 
 ### 选择
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `v` | n | 进入字符可视模式 |
-| `V` | n | 进入行可视模式 |
-| `Ctrl-v` | n | 进入块可视模式 |
 
-### 搜索和替换
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `/` | n | 向前搜索 |
-| `?` | n | 向后搜索 |
-| `n` | n | 下一个匹配 |
-| `N` | n | 上一个匹配 |
-| `*` | n | 搜索当前单词 (向前) |
-| `#` | n | 搜索当前单词 (向后) |
-| `:%s/old/new/g` | n | 全局替换 |
+| 按键 | 说明 |
+|------|------|
+| `v` | 字符可视模式 |
+| `V` | 行可视模式 |
+| `<C-v>` | 块可视模式 |
+
+### 搜索替换
+
+| 按键 | 说明 |
+|------|------|
+| `/` / `?` | 向前 / 向后搜索 |
+| `n` / `N` | 下一个 / 上一个匹配 |
+| `*` / `#` | 搜索当前词（向前 / 向后） |
+| `:%s/old/new/g` | 全局替换 |
 
 ### 窗口管理
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `Ctrl-w h` | n | 切换到左边窗口 |
-| `Ctrl-w j` | n | 切换到下边窗口 |
-| `Ctrl-w k` | n | 切换到上边窗口 |
-| `Ctrl-w l` | n | 切换到右边窗口 |
-| `Ctrl-w s` | n | 水平分割窗口 |
-| `Ctrl-w v` | n | 垂直分割窗口 |
-| `Ctrl-w c` | n | 关闭当前窗口 |
-| `Ctrl-w =` | n | 均衡窗口大小 |
-| `Ctrl-w _` | n | 最大化窗口高度 |
-| `Ctrl-w |` | n | 最大化窗口宽度 |
-| `Ctrl-w r` | n | 旋转窗口 |
-| `Ctrl-w x` | n | 交换窗口 |
+
+| 按键 | 说明 |
+|------|------|
+| `<C-w>h/j/k/l` | 切到左 / 下 / 上 / 右窗口 |
+| `<C-w>s` / `<C-w>v` | 水平 / 垂直分割 |
+| `<C-w>c` / `<C-w>=` | 关闭窗口 / 均衡大小 |
 
 ### 标签页
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `:tabnew` | n | 新建标签页 |
-| `gt` | n | 下一个标签页 |
-| `gT` | n | 上一个标签页 |
-| `{i}gt` | n | 切换到第 i 个标签页 |
 
-### 插入模式
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `Ctrl-w` | i | 删除前一个单词 |
-| `Ctrl-u` | i | 删除到行首 |
-| `Ctrl-h` | i | 退格 |
-| `Ctrl-t` | i | 增加缩进 |
-| `Ctrl-d` | i | 减少缩进 |
-| `Ctrl-o` | i | 执行一个正常模式命令后返回插入模式 |
+| 按键 | 说明 |
+|------|------|
+| `gt` / `gT` | 下一个 / 上一个标签页 |
+| `{i}gt` | 切到第 i 个标签页 |
+| `:tabnew` | 新建标签页 |
 
-### 命令行
-| 按键 | 模式 | 描述 |
-|------|------|------|
-| `:` | n | 进入命令行模式 |
-| `q:` | n | 打开命令历史窗口 |
-| `Ctrl-f` | c | 在命令行中打开命令历史窗口 |
+---
 
-## 总结
+## 查看按键的几种方式
 
-此文档涵盖了当前 Neovim 配置中的大多数快捷键。如需更详细的信息，请参考各插件的官方文档。
+```vim
+:WhichKey     " which-key 图形化提示（中文说明）
+:map          " 列出所有键位映射
+:Telescope    " 非本配置；本配置用 <leader>sk 查键位映射
+```
 
-**注意**: 某些插件的快捷键可能会冲突，实际行为以运行时为准。可以使用 `:map` 命令查看当前所有映射。
+> 提示：本配置所有自定义按键的 `desc` 均为中文，配合 which-key 可直接看到中文说明；部分插件（如 fzf-lua、gitsigns）内部按键以其插件文档为准。配置变更后以 `:map` 实际结果为准。
 
-**最后更新**: 2026-04-09
+**最后更新**: 2026-08-21

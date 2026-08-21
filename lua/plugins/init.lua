@@ -4,10 +4,11 @@ LemurVim.plugins = {}
 require("plugins.treesitter") -- 代码高亮
 require("plugins.neo-tree") -- 文件树
 require("plugins.blink") -- 轻量补全框架，提供智能代码补全
-require("plugins.fzf") -- 轻量补全框架，提供智能代码补全
+require("plugins.snippets") -- 代码片段（LuaSnip + friendly-snippets + 自定义）
+require("plugins.fzf") -- 模糊查找
 
 require("plugins.lualine") -- 文件状态展示
-require("plugins.theme-night") -- 主题
+require("plugins.theme") -- 主题
 
 -- require("plugins.cmp") -- 代码片段补全
 require("plugins.lsp") -- 语法支持

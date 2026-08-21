@@ -8,5 +8,5 @@ if not LemurVim.noplugin() then
 end
 -- 调试
 function LemurVim.dump()
-	print(vim.inspect(LemurVim))
+  print(vim.inspect(LemurVim))
 end

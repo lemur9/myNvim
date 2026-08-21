@@ -83,7 +83,7 @@ function M.snippet_preview(snippet)
     end):gsub("%$0", "")
 end
 function M.snippet_fix(snippet)
-local texts = {} ---@type table<number, string>
+  local texts = {} ---@type table<number, string>
   return M.snippet_replace(snippet, function(placeholder)
     texts[placeholder.n] = texts[placeholder.n] or M.snippet_preview(placeholder.text)
     return "${" .. placeholder.n .. ":" .. texts[placeholder.n] .. "}"
