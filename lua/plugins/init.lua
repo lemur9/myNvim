@@ -18,6 +18,7 @@ require("plugins.bufferline") -- tab页缓冲区
 require("plugins.trans") -- 翻译
 require("plugins.markdown") -- markdown预览
 require("plugins.which-key") -- 按键映射
+require("plugins.ide") -- IDE舒适度：自动配对/注释/环绕/快速跳转/折叠
 require("plugins.snacks") -- lazy.vim工具类
 require("plugins.gitsigns") -- git提示
 require("plugins.dashboard") -- 主页

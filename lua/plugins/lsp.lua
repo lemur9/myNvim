@@ -20,10 +20,10 @@ LemurVim.plugins.lsp = {
     },
     opts = {
       ensure_installed = { -- 列出需要自动安装的 LSP 服务器
-        "jdtls",
+        "jdtls", -- Java（配了 lombok 支持）
         "vimls",
         "lua_ls",
-        "clangd",
+        -- "clangd", -- C/C++，需要时取消注释
         "bashls",
         "html",
         "cssls",
@@ -31,8 +31,8 @@ LemurVim.plugins.lsp = {
         "vue_ls",
         "jsonls",
         "tailwindcss",
-        "dockerls",
-        "docker_compose_language_service",
+        -- "dockerls", -- 需要时取消注释
+        -- "docker_compose_language_service",
       },
       automatic_installation = true, -- 打开文件时自动安装缺失的 LSP
     },
@@ -47,6 +47,18 @@ LemurVim.plugins.lsp = {
     },
     config = function()
       local icons = LemurVim.config.icons.diagnostics
+
+      -- 保存时自动格式化（有 LSP formatter 的语言生效，其余无操作）
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true }),
+        callback = function(args)
+          pcall(vim.lsp.buf.format, { bufnr = args.buf, timeout_ms = 2000 })
+        end,
+      })
+
+      -- 诊断导航：]d / [d 跳到下一个/上一个诊断（错误、警告等）
+      vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "下一个诊断" })
+      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "上一个诊断" })
 
       -- 诊断信息设置、快捷键、服务器配置等
       -- 配置提示文本

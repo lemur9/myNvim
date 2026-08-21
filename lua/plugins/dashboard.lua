@@ -46,6 +46,24 @@ LemurVim.plugins.dashboard = {
     },
   },
   config = function(_, opts)
+    -- 防线2：doom 主题通过 `lines[i]:find('%w')` 反推 center 条目索引，
+    -- 任何不含 ASCII 字母/数字的 desc 都会导致索引错位并崩溃
+    -- （doom.lua:63 "attempt to index a nil value"）。
+    -- 这里提前检测，给出明确的警告而不是晦涩的报错。
+    for i, item in ipairs(opts.config.center or {}) do
+      local text = (item.icon or "") .. (item.desc or "")
+      if not text:find("%w") then
+        vim.notify(
+          string.format(
+            "dashboard-nvim: center[%d] (desc=%q) 不含 ASCII 字母/数字，doom 主题会崩溃，请在 desc 中加入英文，如 \"编辑配置 (Edit Config)\"",
+            i,
+            tostring(item.desc or "")
+          ),
+          vim.log.levels.WARN
+        )
+      end
+    end
+
     require("dashboard").setup(opts)
 
     if vim.api.nvim_buf_get_name(0) == "" then
