@@ -10,7 +10,7 @@ G.opt = vim.opt
 G.treesitter = vim.treesitter
 
 function G.maps(maps)
-  for _,map in pairs(maps) do
+  for _, map in pairs(maps) do
     vim.keymap.set(map[1], map[2], map[3], map[4])
   end
 end
@@ -27,15 +27,27 @@ end
 --     ...,
 -- })
 function G.hi(hls)
-  local colormode = G.o.termguicolors and '' or 'cterm'
+  local colormode = G.o.termguicolors and "" or "cterm"
   for group, color in pairs(hls) do
     local opt = {}
-    if color.fg then opt[colormode .. 'fg'] = color.fg end
-    if color.bg then opt[colormode .. 'bg'] = color.bg end
-    if color.bold ~= nil then opt.bold = color.bold end
-    if color.underline ~= nil then opt.underline = color.underline end
-    if color.italic ~= nil then opt.italic = color.italic end
-    if color.strikethrough ~= nil then opt.strikethrough = color.strikethrough end
+    if color.fg then
+      opt[colormode .. "fg"] = color.fg
+    end
+    if color.bg then
+      opt[colormode .. "bg"] = color.bg
+    end
+    if color.bold ~= nil then
+      opt.bold = color.bold
+    end
+    if color.underline ~= nil then
+      opt.underline = color.underline
+    end
+    if color.italic ~= nil then
+      opt.italic = color.italic
+    end
+    if color.strikethrough ~= nil then
+      opt.strikethrough = color.strikethrough
+    end
     G.api.nvim_set_hl(0, group, opt)
   end
 end

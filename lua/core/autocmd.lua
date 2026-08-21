@@ -7,36 +7,36 @@ local function _markdown()
     ["MDTodoDate"] = {
       fg = "#5c4aff",
       bold = true,
-      italic = false
+      italic = false,
     },
     -- 完成日期 (浅蓝)
     ["MDDoneDate"] = {
       fg = "#c0caf5",
       italic = true,
-      strikethrough = true
+      strikethrough = true,
     },
     -- 待办文本 (浅蓝)
     ["MDTodoText"] = {
       fg = "#c0caf5",
-      italic = false
+      italic = false,
     },
-    -- 完成文本 (浅绿) 
+    -- 完成文本 (浅绿)
     ["MDDoneText"] = {
       fg = "#9ece6a",
       italic = true,
-      strikethrough = true
+      strikethrough = true,
     },
     -- 截止日期 (大红)
     ["MDDeadline"] = {
       fg = "#fa2828",
       bold = true,
-      underline = true
+      underline = true,
     },
     -- 临近日期 (粉红)
     ["MDNearline"] = {
       fg = "#fa6e6e",
-      bold = true
-    }
+      bold = true,
+    },
   })
 
   -- 匹配并高亮截止日期和临近日期
@@ -48,8 +48,18 @@ local function _markdown()
 
   -- 键位映射
   LemurVim.G.maps({
-    { "n", "<cr>", ":call v:lua.LemurVim_markdown_toggleCheck(0)<cr><cr>", { noremap = true, silent = true, buffer = true } },
-    { "n", "<2-LeftMouse>", ":call v:lua.LemurVim_markdown_toggleCheck(1)<cr><2-LeftMouse>", { noremap = true, silent = true, buffer = true } },
+    {
+      "n",
+      "<cr>",
+      ":call v:lua.LemurVim_markdown_toggleCheck(0)<cr><cr>",
+      { noremap = true, silent = true, buffer = true },
+    },
+    {
+      "n",
+      "<2-LeftMouse>",
+      ":call v:lua.LemurVim_markdown_toggleCheck(1)<cr><2-LeftMouse>",
+      { noremap = true, silent = true, buffer = true },
+    },
   })
   -- 延迟加载语法规则
   LemurVim.G.command("call timer_start(0, 'v:lua.LemurVim_markdown_loadafter')")
@@ -62,21 +72,24 @@ local map = {
 for filetype, func in pairs(map) do
   LemurVim.G.api.nvim_create_autocmd({ "FileType" }, {
     pattern = { filetype },
-    callback = function ()
-      if LemurVim.G.b.loaded == 1 then return end; LemurVim.G.b.loaded = 1
+    callback = function()
+      if LemurVim.G.b.loaded == 1 then
+        return
+      end
+      LemurVim.G.b.loaded = 1
       func()
-    end
+    end,
   })
 end
 
 -- 部分需要暴露到全局的函数
 function LemurVim_markdown_loadafter()
   LemurVim.G.command([[syn match markdownError "\w\@<=\w\@="]])
-  LemurVim.G.command([[syn match MDDoneDate /[SD]:\d\{4\}\([\/-]\d\d\)\{2\}/ contained]])      -- 完成事项的日期匹配
-  LemurVim.G.command([[syn match MDTodoDate /[SD]:\d\{4\}\([\/-]\d\d\)\{2\}/ contained]])      -- 待办事项的日期匹配
-  LemurVim.G.command([[syn match MDDoneText /- \[x\] \zs.*/ contains=MDDoneDate contained]])   -- 已完成任务的文本匹配
-  LemurVim.G.command([[syn match MDTodoText /- \[ \] \zs.*/ contains=MDTodoDate contained]])   -- 未完成任务的文本匹配
-  LemurVim.G.command([[syn match MDTask /- \[\(x\| \)\] .*/ contains=MDDoneText,MDTodoText]])  -- 通用任务行匹配
+  LemurVim.G.command([[syn match MDDoneDate /[SD]:\d\{4\}\([\/-]\d\d\)\{2\}/ contained]]) -- 完成事项的日期匹配
+  LemurVim.G.command([[syn match MDTodoDate /[SD]:\d\{4\}\([\/-]\d\d\)\{2\}/ contained]]) -- 待办事项的日期匹配
+  LemurVim.G.command([[syn match MDDoneText /- \[x\] \zs.*/ contains=MDDoneDate contained]]) -- 已完成任务的文本匹配
+  LemurVim.G.command([[syn match MDTodoText /- \[ \] \zs.*/ contains=MDTodoDate contained]]) -- 未完成任务的文本匹配
+  LemurVim.G.command([[syn match MDTask /- \[\(x\| \)\] .*/ contains=MDDoneText,MDTodoText]]) -- 通用任务行匹配
   LemurVim.G.command([[
         let b:md_block = '```'
         setlocal shiftwidth=2
@@ -86,10 +99,16 @@ function LemurVim_markdown_loadafter()
 end
 
 function LemurVim_markdown_toggleCheck(needsave)
-  local line = LemurVim.G.fn.getline('.')
-  if line:match('^%s*- %[ %]') then line = line:gsub('%[ %]', '[x]')
-  elseif line:match('^%s*- %[x%]') then line = line:gsub('%[x%]', '[ ]')
-  else return end
-  LemurVim.G.fn.setline('.', line)
-  if needsave then LemurVim.G.command('w') end
+  local line = LemurVim.G.fn.getline(".")
+  if line:match("^%s*- %[ %]") then
+    line = line:gsub("%[ %]", "[x]")
+  elseif line:match("^%s*- %[x%]") then
+    line = line:gsub("%[x%]", "[ ]")
+  else
+    return
+  end
+  LemurVim.G.fn.setline(".", line)
+  if needsave then
+    LemurVim.G.command("w")
+  end
 end

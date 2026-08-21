@@ -163,7 +163,9 @@ LemurVim.plugins["neo-tree"] = {
       -- 关闭 tab 后焦点若落在 neo-tree，跳到普通窗口
       vim.api.nvim_create_autocmd("TabEnter", {
         callback = function()
-          if vim.bo.filetype ~= "neo-tree" then return end
+          if vim.bo.filetype ~= "neo-tree" then
+            return
+          end
           -- 先尝试跳回上一个窗口
           vim.cmd("wincmd p")
           if vim.bo.filetype == "neo-tree" then
@@ -181,7 +183,9 @@ LemurVim.plugins["neo-tree"] = {
 
       vim.api.nvim_create_autocmd("QuitPre", {
         callback = function()
-          if vim.bo.filetype == "neo-tree" then return end
+          if vim.bo.filetype == "neo-tree" then
+            return
+          end
           local cur_win = vim.api.nvim_get_current_win()
           local other_normal_wins = 0
           for _, win in ipairs(vim.api.nvim_list_wins()) do

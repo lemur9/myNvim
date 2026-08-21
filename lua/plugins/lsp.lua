@@ -1,49 +1,49 @@
 LemurVim.plugins.lsp = {
   -- lsp installation
   {
-    'williamboman/mason-lspconfig.nvim',
+    "williamboman/mason-lspconfig.nvim",
     dependencies = {
-      'williamboman/mason.nvim',              -- lsp 管理插件
-      cmd = 'Mason',
+      "williamboman/mason.nvim", -- lsp 管理插件
+      cmd = "Mason",
       opts = {
         ui = {
-          border = 'rounded',
+          border = "rounded",
           width = 0.8,
           height = 0.7,
           icons = {
-            package_installed = '󰺧',
-            package_pending = '',
-            package_uninstalled = '󰺭',
+            package_installed = "󰺧",
+            package_pending = "",
+            package_uninstalled = "󰺭",
           },
         },
       },
     },
     opts = {
-      ensure_installed = {            -- 列出需要自动安装的 LSP 服务器
-        'jdtls',
-        'vimls',
-        'lua_ls',
-        'clangd',
-        'bashls',
-        'html',
-        'cssls',
-        'ts_ls',
-        'vue_ls',
-        'jsonls',
-        'tailwindcss',
-        'dockerls',
-        'docker_compose_language_service',
+      ensure_installed = { -- 列出需要自动安装的 LSP 服务器
+        "jdtls",
+        "vimls",
+        "lua_ls",
+        "clangd",
+        "bashls",
+        "html",
+        "cssls",
+        "ts_ls",
+        "vue_ls",
+        "jsonls",
+        "tailwindcss",
+        "dockerls",
+        "docker_compose_language_service",
       },
-      automatic_installation = true,      -- 打开文件时自动安装缺失的 LSP
+      automatic_installation = true, -- 打开文件时自动安装缺失的 LSP
     },
   },
 
   -- lsp 核心配置
   {
-    'neovim/nvim-lspconfig',
-    event = 'VeryLazy',
+    "neovim/nvim-lspconfig",
+    event = "VeryLazy",
     dependencies = {
-      { 'j-hui/fidget.nvim', opts = {} },
+      { "j-hui/fidget.nvim", opts = {} },
     },
     config = function()
       local icons = LemurVim.config.icons.diagnostics
@@ -55,7 +55,7 @@ LemurVim.plugins.lsp = {
         virtual_text = true,
         -- 在输入模式下也更新提示，设置为 true 也许会影响性能
         update_in_insert = true,
-        float = { border = 'rounded' },
+        float = { border = "rounded" },
       })
 
       -- 使用新 API 配置诊断符号
@@ -63,71 +63,71 @@ LemurVim.plugins.lsp = {
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = icons.Error,
-            [vim.diagnostic.severity.WARN]  = icons.Warn,
-            [vim.diagnostic.severity.INFO]  = icons.Info,
-            [vim.diagnostic.severity.HINT]  = icons.Hint,
+            [vim.diagnostic.severity.WARN] = icons.Warn,
+            [vim.diagnostic.severity.INFO] = icons.Info,
+            [vim.diagnostic.severity.HINT] = icons.Hint,
           },
           numhl = {
             [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
-            [vim.diagnostic.severity.WARN]  = "DiagnosticSignWarn",
-            [vim.diagnostic.severity.INFO]  = "DiagnosticSignInfo",
-            [vim.diagnostic.severity.HINT]  = "DiagnosticSignHint",
+            [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+            [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+            [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
           },
         },
       })
 
       -- lsp 快捷键设置
-      vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
-          vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+          vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
           -- 悬停文档
-          vim.keymap.set('n', '<space>gh', vim.lsp.buf.hover, { buffer = ev.buf, desc = 'LSP 悬停文档' })
+          vim.keymap.set("n", "<space>gh", vim.lsp.buf.hover, { buffer = ev.buf, desc = "LSP 悬停文档" })
           -- 跳转到定义
-          vim.keymap.set('n', '<space>gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = '跳转到定义' })
+          vim.keymap.set("n", "<space>gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "跳转到定义" })
           -- 查询引用
-          vim.keymap.set('n', '<space>gr', vim.lsp.buf.references, { buffer = ev.buf, desc = '查询引用' })
+          vim.keymap.set("n", "<space>gr", vim.lsp.buf.references, { buffer = ev.buf, desc = "查询引用" })
           -- 重命名
-          vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, { buffer = ev.buf, desc = '重命名符号' })
+          vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, { buffer = ev.buf, desc = "重命名符号" })
           -- 代码操作
-          vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, { buffer = ev.buf, desc = '代码操作' })
+          vim.keymap.set({ "n", "v" }, "<space>ca", vim.lsp.buf.code_action, { buffer = ev.buf, desc = "代码操作" })
         end,
       })
 
       -- border for float win (nvim 0.11+)
-      vim.o.winborder = 'rounded'
+      vim.o.winborder = "rounded"
 
       -- autocompletion
       -- 获取 LSP 客户端能力配置
       local capabilities = vim.lsp.protocol.make_client_capabilities()
 
       -- 如果使用 blink.cmp，尝试获取其 capabilities
-      local has_blink, blink = pcall(require, 'blink.cmp')
+      local has_blink, blink = pcall(require, "blink.cmp")
       if has_blink and blink.get_lsp_capabilities then
-        capabilities = vim.tbl_deep_extend('force', capabilities, blink.get_lsp_capabilities())
+        capabilities = vim.tbl_deep_extend("force", capabilities, blink.get_lsp_capabilities())
       end
 
       -- on attch
       local on_attach = function(client, bufnr)
         -- highlight symbol under cursor
         if client.server_capabilities.documentHighlightProvider then
-          vim.api.nvim_create_augroup('lsp_document_highlight', {
+          vim.api.nvim_create_augroup("lsp_document_highlight", {
             clear = false,
           })
           vim.api.nvim_clear_autocmds({
             buffer = bufnr,
-            group = 'lsp_document_highlight',
+            group = "lsp_document_highlight",
           })
-          vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-            group = 'lsp_document_highlight',
+          vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+            group = "lsp_document_highlight",
             buffer = bufnr,
             callback = function()
               vim.lsp.buf.document_highlight()
             end,
           })
-          vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-            group = 'lsp_document_highlight',
+          vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+            group = "lsp_document_highlight",
             buffer = bufnr,
             callback = function()
               vim.lsp.buf.clear_references()
@@ -137,16 +137,16 @@ LemurVim.plugins.lsp = {
       end
 
       local servers = {
-        'jdtls',
-        'vimls',
-        'clangd',
-        'bashls',
-        'html',
-        'cssls',
-        'jsonls',
-        'tailwindcss',
-        'dockerls',
-        'docker_compose_language_service',
+        "jdtls",
+        "vimls",
+        "clangd",
+        "bashls",
+        "html",
+        "cssls",
+        "jsonls",
+        "tailwindcss",
+        "dockerls",
+        "docker_compose_language_service",
       }
       for _, lsp in ipairs(servers) do
         vim.lsp.config[lsp] = {
@@ -163,11 +163,11 @@ LemurVim.plugins.lsp = {
           Lua = {
             runtime = {
               -- 告诉语言服务器你在用的是 LuaJIT（Neovim 内置 Lua 版本）
-              version = 'LuaJIT',
+              version = "LuaJIT",
             },
             diagnostics = {
               -- 让 LSP 识别 Neovim 的全局变量
-              globals = { 'vim' },
+              globals = { "vim" },
             },
             workspace = {
               -- 让 LSP 知道 Neovim 的运行时文件（这样才能识别 vim.xxx API）
@@ -180,20 +180,21 @@ LemurVim.plugins.lsp = {
       }
 
       -- vue（Mason 安装目录统一使用 stdpath('data')）
-      local mason_packages = vim.fn.stdpath('data') .. '/mason/packages'
-      local vue_language_server_path = mason_packages .. '/vue-language-server/node_modules/@vue/language-server'
-      local typescript_language_server_path = mason_packages .. '/typescript-language-server/node_modules/typescript/lib'
+      local mason_packages = vim.fn.stdpath("data") .. "/mason/packages"
+      local vue_language_server_path = mason_packages .. "/vue-language-server/node_modules/@vue/language-server"
+      local typescript_language_server_path = mason_packages
+        .. "/typescript-language-server/node_modules/typescript/lib"
 
       vim.lsp.config["ts_ls"] = {
         on_attach = on_attach,
         capabilities = capabilities,
-        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
         init_options = {
           plugins = {
             {
-              name = '@vue/typescript-plugin',
+              name = "@vue/typescript-plugin",
               location = vue_language_server_path,
-              languages = { 'vue' },
+              languages = { "vue" },
             },
           },
         },
@@ -224,32 +225,32 @@ LemurVim.plugins.lsp = {
           "--add-opens",
           "java.base/java.lang=ALL-UNNAMED",
           --增加lombok插件支持，getter setter good bye
-          "-javaagent:" .. vim.fn.stdpath('data') .. "/mason/packages/jdtls/lombok.jar",
-          "-Xbootclasspath/a:" .. vim.fn.stdpath('data') .. "/mason/packages/jdtls/lombok.jar",
+          "-javaagent:" .. vim.fn.stdpath("data") .. "/mason/packages/jdtls/lombok.jar",
+          "-Xbootclasspath/a:" .. vim.fn.stdpath("data") .. "/mason/packages/jdtls/lombok.jar",
           "-jar",
-          vim.fn.glob(vim.fn.stdpath('data') .. "/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
+          vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
           "-configuration",
-          vim.fn.stdpath('data') .. "/mason/packages/jdtls/config_linux",
+          vim.fn.stdpath("data") .. "/mason/packages/jdtls/config_linux",
           "-data",
-          vim.fn.stdpath('data') .. "/mason/packages/jdtls/workspace/folder"
+          vim.fn.stdpath("data") .. "/mason/packages/jdtls/workspace/folder",
         },
         root_dir = function()
           local marker = vim.fs.find({ ".git", "pom.xml", "build.gradle" }, { upward = true })[1]
           return marker and vim.fs.dirname(marker) or vim.uv.cwd()
         end,
         init_options = {
-          bundles = {}
+          bundles = {},
         },
         settings = {
           java = {
             -- 启用 Lombok 注解处理
             configuration = {
               annotationProcessing = {
-                enabled = true
-              }
-            }
-          }
-        }
+                enabled = true,
+              },
+            },
+          },
+        },
       }
     end,
   },
@@ -259,14 +260,14 @@ LemurVim.plugins.lsp = {
     event = "VeryLazy",
     build = ":LiveServerInstall",
     config = function()
-      require("live-server-nvim").setup{
+      require("live-server-nvim").setup({
         custom = {
           "--port=5555",
           "--no-css-inject",
         },
         serverPath = vim.fn.stdpath("data") .. "/live-server/", --default
         open = "folder", -- folder|cwd     --default
-      }
+      })
     end,
   },
 }

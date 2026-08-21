@@ -185,7 +185,8 @@ LemurVim.plugins["nvim-cmp"] = {
       opts.appearance = opts.appearance or {}
       -- 安全访问 LemurVim.config
       if _G.LemurVim and LemurVim.config and LemurVim.config.icons and LemurVim.config.icons.kinds then
-        opts.appearance.kind_icons = vim.tbl_extend("force", opts.appearance.kind_icons or {}, LemurVim.config.icons.kinds)
+        opts.appearance.kind_icons =
+          vim.tbl_extend("force", opts.appearance.kind_icons or {}, LemurVim.config.icons.kinds)
       end
     end,
   },

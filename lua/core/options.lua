@@ -54,7 +54,6 @@ LemurVim.G.g.loaded_netrwPlugin = 1
 LemurVim.G.g.mapleader = " " -- 设置全局映射前导键为空格键
 LemurVim.G.g.maplocalleader = "\\" -- 设置局部映射前导键为反斜杠
 
-
 -- 如果补全引擎支持 AI 源，则优先使用而非内联建议
 LemurVim.G.g.ai_cmp = true -- 启用 AI 补全源
 
@@ -65,10 +64,8 @@ LemurVim.G.g.ai_cmp = true -- 启用 AI 补全源
 -- * 签名为 `function(buf) -> string|string[]` 的函数
 LemurVim.G.g.root_spec = { "lsp", { ".git", "lua" }, "cwd" } -- 根目录检测规则
 
-
 -- 设置在使用 `util.root.detectors.lsp` 检测 LSP 根目录时需要忽略的 LSP 服务器
 LemurVim.G.g.root_lsp_ignore = { "copilot" } -- 忽略 Copilot LSP 服务器用于根目录检测
-
 
 LemurVim.G.opt.autowrite = true -- 启用自动写入（离开缓冲区时自动保存）
 -- 仅在非 SSH 环境下设置剪贴板，确保 OSC 52 集成能自动工作
@@ -78,12 +75,12 @@ LemurVim.G.opt.conceallevel = 2 -- 隐藏粗体和斜体的 * 标记，但不隐
 LemurVim.G.opt.confirm = true -- 退出修改后的缓冲区前确认是否保存更改
 LemurVim.G.opt.expandtab = true -- 使用空格代替制表符
 LemurVim.G.opt.fillchars = { -- 设置各种填充字符
-	foldopen = "", -- 折叠展开时的图标
-	foldclose = "", -- 折叠关闭时的图标
-	fold = " ", -- 折叠区域填充字符
-	foldsep = " ", -- 折叠分隔符
-	diff = "╱", -- 差异区域填充字符
-	eob = " ", -- 文件结尾填充字符
+  foldopen = "", -- 折叠展开时的图标
+  foldclose = "", -- 折叠关闭时的图标
+  fold = " ", -- 折叠区域填充字符
+  foldsep = " ", -- 折叠分隔符
+  diff = "╱", -- 差异区域填充字符
+  eob = " ", -- 文件结尾填充字符
 }
 LemurVim.G.opt.formatoptions = "jcroqlnt" -- tcqj 格式化选项
 LemurVim.G.opt.grepformat = "%f:%l:%c:%m" -- grep 输出格式
@@ -137,40 +134,40 @@ LemurVim.G.command([[
 
 -- 这是一个自定义函数，用于美化代码折叠时的显示文本
 function MagicFoldText()
-	-- 创建替换制表符的空格文本
-	local spacetext = ("        "):sub(0, LemurVim.G.opt.shiftwidth:get0())
-	-- 获取折叠开始行的内容，并将制表符替换为空格
-	local line = LemurVim.G.fn.getline(LemurVim.G.v.foldstart):gsub("\t", spacetext)
-	-- 计算折叠的行数
-	local folded = LemurVim.G.v.foldend - LemurVim.G.v.foldstart + 1
-	-- 查找第一个非空白字符的位置
-	local findresult = line:find("%S")
-	-- 如果整行都是空白，则返回简单的折叠信息
-	if not findresult then
-		return "+ folded " .. folded .. " lines "
-	end
-	-- 计算行首空白字符的数量
-	local empty = findresult - 1
-	-- 定义不同缩进级别的处理函数
-	local funcs = {
-		[0] = function(_)
-			return "" .. line
-		end, -- 无缩进
-		[1] = function(_)
-			return "+" .. line:sub(2)
-		end, -- 1个字符缩进
-		[2] = function(_)
-			return "+ " .. line:sub(3)
-		end, -- 2个字符缩进
-		[-1] = function(c) -- 更多缩进的处理
-			local result = " " .. line:sub(c + 1)
-			local foldednumlen = #tostring(folded)
-			for _ = 1, c - 2 - foldednumlen do
-				result = "-" .. result
-			end
-			return "+" .. folded .. result
-		end,
-	}
-	-- 根据缩进数量选择相应的处理函数，并添加折叠行数信息
-	return funcs[empty <= 2 and empty or -1](empty) .. " folded " .. folded .. " lines "
+  -- 创建替换制表符的空格文本
+  local spacetext = ("        "):sub(0, LemurVim.G.opt.shiftwidth:get0())
+  -- 获取折叠开始行的内容，并将制表符替换为空格
+  local line = LemurVim.G.fn.getline(LemurVim.G.v.foldstart):gsub("\t", spacetext)
+  -- 计算折叠的行数
+  local folded = LemurVim.G.v.foldend - LemurVim.G.v.foldstart + 1
+  -- 查找第一个非空白字符的位置
+  local findresult = line:find("%S")
+  -- 如果整行都是空白，则返回简单的折叠信息
+  if not findresult then
+    return "+ folded " .. folded .. " lines "
+  end
+  -- 计算行首空白字符的数量
+  local empty = findresult - 1
+  -- 定义不同缩进级别的处理函数
+  local funcs = {
+    [0] = function(_)
+      return "" .. line
+    end, -- 无缩进
+    [1] = function(_)
+      return "+" .. line:sub(2)
+    end, -- 1个字符缩进
+    [2] = function(_)
+      return "+ " .. line:sub(3)
+    end, -- 2个字符缩进
+    [-1] = function(c) -- 更多缩进的处理
+      local result = " " .. line:sub(c + 1)
+      local foldednumlen = #tostring(folded)
+      for _ = 1, c - 2 - foldednumlen do
+        result = "-" .. result
+      end
+      return "+" .. folded .. result
+    end,
+  }
+  -- 根据缩进数量选择相应的处理函数，并添加折叠行数信息
+  return funcs[empty <= 2 and empty or -1](empty) .. " folded " .. folded .. " lines "
 end
