@@ -32,25 +32,6 @@ LemurVim.plugins["neo-tree"] = {
         desc = "文件树 (当前目录)",
       },
       {
-        "<leader>fe",
-        function()
-          -- 浮动大文件树：用于查看深层目录里的长文件名
-          local root_dir = vim.uv.cwd()
-          if _G.LemurVim and LemurVim.root then
-            pcall(function()
-              root_dir = LemurVim.root()
-            end)
-          end
-          require("neo-tree.command").execute({
-            toggle = true,
-            position = "float",
-            reveal = true,
-            dir = root_dir,
-          })
-        end,
-        desc = "浮动大文件树 (根目录)",
-      },
-      {
         "<C-e>",
         function()
           -- 检查 neo-tree 窗口是否存在
@@ -122,13 +103,6 @@ LemurVim.plugins["neo-tree"] = {
       window = {
         max_width = 30,
         width = 30,
-        popup = {
-          size = {
-            height = "80%",
-            width = "80%",
-          },
-          position = "50%",
-        },
         mappings = {
           ["l"] = "open",
           ["h"] = "close_node",
