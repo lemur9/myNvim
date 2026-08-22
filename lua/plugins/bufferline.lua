@@ -14,17 +14,6 @@ LemurVim.plugins.bufferline = {
           buffer_close_icon = "󰅖",
           modified_icon = "●",
           close_icon = "",
-
-          -- 左侧让出 neo-tree 的位置
-          offsets = {
-            {
-              filetype = "neo-tree",
-              text = "File Explorer",
-              highlight = "Directory",
-              text_align = "left",
-              separator = false,
-            },
-          },
         },
       })
     end,

@@ -98,11 +98,26 @@ LemurVim.plugins["neo-tree"] = {
       filesystem = {
         bind_to_cwd = false,
         follow_current_file = { enabled = true },
+        group_empty_dirs = true,
         use_libuv_file_watcher = true,
       },
       window = {
-        max_width = 30,
-        width = 30,
+        -- 默认使用浮动大文件树，参考 yaocccc/nvim 的思路：居中显示并按屏幕动态计算大小
+        position = "float",
+        popup = {
+          position = "50%",
+          size = function()
+            local columns = vim.o.columns
+            local lines = vim.o.lines
+            local width = math.max(math.floor(columns * 0.5), 50)
+            local height = math.max(math.floor(lines * 0.5), 20)
+
+            return {
+              width = math.min(width, columns - 4),
+              height = math.min(height, lines - 4),
+            }
+          end,
+        },
         mappings = {
           ["l"] = "open",
           ["h"] = "close_node",
