@@ -48,13 +48,53 @@ LemurVim.plugins.lsp = {
     config = function()
       local icons = LemurVim.config.icons.diagnostics
 
-      -- 保存时自动格式化（有 LSP formatter 的语言生效，其余无操作）
+      -- 保存时自动格式化（默认关闭，需要时用 :FormatOnSave 或 <leader>uf 打开）
+      -- 全局开关：vim.g.autoformat；单缓冲区开关：vim.b.autoformat
+      vim.g.autoformat = false
+
+      local format_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true })
       vim.api.nvim_create_autocmd("BufWritePre", {
-        group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true }),
+        group = format_group,
         callback = function(args)
+          -- 全局关闭或当前 buffer 关闭时，跳过格式化
+          if vim.g.autoformat == false or vim.b[args.buf].autoformat == false then
+            return
+          end
           pcall(vim.lsp.buf.format, { bufnr = args.buf, timeout_ms = 2000 })
         end,
       })
+
+      -- 命令：全局 / 当前缓冲区切换保存时自动格式化
+      vim.api.nvim_create_user_command("FormatOnSave", function()
+        vim.g.autoformat = true
+        vim.notify("已开启：保存时自动格式化（全局）", vim.log.levels.INFO)
+      end, { desc = "开启保存时自动格式化（全局）" })
+
+      vim.api.nvim_create_user_command("NoFormatOnSave", function()
+        vim.g.autoformat = false
+        vim.notify("已关闭：保存时自动格式化（全局）", vim.log.levels.INFO)
+      end, { desc = "关闭保存时自动格式化（全局）" })
+
+      vim.api.nvim_create_user_command("FormatOnSaveToggle", function()
+        vim.g.autoformat = not vim.g.autoformat
+        vim.notify(
+          (vim.g.autoformat and "已开启" or "已关闭") .. "：保存时自动格式化（全局）",
+          vim.log.levels.INFO
+        )
+      end, { desc = "切换保存时自动格式化（全局）" })
+
+      vim.api.nvim_create_user_command("FormatBufferOnSave", function()
+        vim.b.autoformat = true
+        vim.notify("已开启：当前缓冲区保存时自动格式化", vim.log.levels.INFO)
+      end, { desc = "开启当前缓冲区保存时自动格式化" })
+
+      vim.api.nvim_create_user_command("NoFormatBufferOnSave", function()
+        vim.b.autoformat = false
+        vim.notify("已关闭：当前缓冲区保存时自动格式化", vim.log.levels.INFO)
+      end, { desc = "关闭当前缓冲区保存时自动格式化" })
+
+      -- 快捷键：<leader>uf 全局切换
+      vim.keymap.set("n", "<leader>uf", "<cmd>FormatOnSaveToggle<cr>", { desc = "切换保存时自动格式化" })
 
       -- 诊断导航：]d / [d 跳到下一个/上一个诊断（错误、警告等）
       vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "下一个诊断" })
