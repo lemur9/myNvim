@@ -23,6 +23,16 @@ keymap({ "n", "i" }, "<C-z>", "<Cmd>undo<CR>", { silent = true, desc = "撤销" 
 -- 取消搜索高亮
 keymap("n", "<leader>nh", ":nohl<CR>", { silent = true, desc = "取消搜索高亮" })
 
+-- 忘记快捷键？按这个直接搜全部键位
+keymap("n", "<leader>?", function()
+  local ok, fzf = pcall(require, "fzf-lua")
+  if ok then
+    fzf.keymaps()
+  else
+    vim.cmd("FzfLua keymaps")
+  end
+end, { silent = true, desc = "❓ 搜索所有键位" })
+
 -- ==================== 插件 ====================
 -- 缓冲区切换
 keymap("n", "<A-Left>", "<Cmd>BufferLineCyclePrev<CR>", { silent = true, desc = "上一个缓冲区" })
